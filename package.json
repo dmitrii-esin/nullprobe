@@ -1,0 +1,39 @@
+{
+  "name": "nullprobe",
+  "version": "0.1.0",
+  "description": "Scaffold AI collaboration layers into any project",
+  "type": "module",
+  "bin": {
+    "nullprobe": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc && chmod +x dist/index.js",
+    "dev": "tsx src/index.ts"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "ai",
+    "scaffold",
+    "cli",
+    "claude",
+    "cursor",
+    "gemini",
+    "skills"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@inquirer/prompts": "^8.4.3",
+    "@octokit/rest": "^21.0.0",
+    "chalk": "^5.3.0",
+    "commander": "^12.1.0",
+    "ora": "^8.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "tsx": "^4.16.0",
+    "typescript": "^5.5.0"
+  }
+}

@@ -1,0 +1,39 @@
+---
+description: nullprobe project workflow rules — namespace protection, validation, docs contract
+alwaysApply: true
+---
+
+# nullprobe Workflow
+
+## Namespace Protection
+
+This project supports multiple AI environments in parallel:
+- `.claude/` — Claude Code agents, skills, commands
+- `.cursor/` — Cursor rules and MCP config
+- `.agent/` — Antigravity/Gemini CLI rules and MCP config
+
+When working from Cursor, prefer not to edit `.claude/` or `.agent/` unless intentionally updating shared protocols.
+
+## Shared Source of Truth
+
+- `AI_FRAMEWORK.md` — portable AI collaboration guide (authoritative)
+- `wiki/index.md` — knowledge catalog (read at session start)
+- `wiki/log.md` — session log (append after substantive work)
+
+## MCP Alignment
+
+Keep MCP servers in sync across:
+- Claude Code: `.mcp.json`
+- Cursor: `.cursor/mcp.json`
+- Antigravity: `.agent/mcp_config.json`
+
+## Before Finishing Work
+
+- Run `npm run build` to verify TypeScript compiles
+- Append to `wiki/log.md` if you learned something durable
+- Update `wiki/index.md` if you created new architecture decisions
+
+## Core Principle
+
+This tool is lightweight above all else. Every feature addition must pass:
+"Does this make the tool simpler to use, or more complex?"

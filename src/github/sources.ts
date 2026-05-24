@@ -1,0 +1,60 @@
+import type { SourceRepo } from '../types.js';
+
+export const SOURCE_REPOS: SourceRepo[] = [
+  {
+    id: 'karpathy-llmwiki',
+    label: 'Karpathy LLM Wiki',
+    owner: 'karpathy',
+    repo: null,
+    gistId: '442a6bf555914893e9891c11519de94f',
+    description: 'Wiki pattern: compile knowledge, CLAUDE.md schema, human+LLM division',
+  },
+  {
+    id: 'rohitg00-llmwiki-v2',
+    label: 'rohitg00 LLM Wiki v2',
+    owner: 'rohitg00',
+    repo: null,
+    gistId: '2067ab416f7bbe447c1977edaaa681e2',
+    description: 'Memory lifecycle, confidence/decay/supersession, 4-tier consolidation',
+  },
+  {
+    id: 'rohitg00-agentmemory',
+    label: 'rohitg00/agentmemory',
+    owner: 'rohitg00',
+    repo: 'agentmemory',
+    gistId: null,
+    description: '14-hook automatic session capture, 4-tier consolidation pipeline',
+  },
+  {
+    id: 'multica-karpathy-skills',
+    label: 'multica-ai/andrej-karpathy-skills',
+    owner: 'multica-ai',
+    repo: 'andrej-karpathy-skills',
+    gistId: null,
+    description: '4 behavioral principles as Claude Code plugin',
+  },
+  {
+    id: 'intellectronica-skillz',
+    label: 'intellectronica/skillz',
+    owner: 'intellectronica',
+    repo: 'skillz',
+    gistId: null,
+    description: 'Canonical SKILL.md format, cross-agent portability',
+  },
+  {
+    id: 'josephsenior-agentic-patterns',
+    label: 'josephsenior/Agentic-Design-Patterns',
+    owner: 'josephsenior',
+    repo: 'Agentic-Design-Patterns',
+    gistId: null,
+    description: '21 agentic patterns: Reflection, Guardrails, Evaluation, Planning',
+  },
+  {
+    id: 'upstash-context7',
+    label: 'upstash/context7',
+    owner: 'upstash',
+    repo: 'context7',
+    gistId: null,
+    description: 'Pulls up-to-date docs and code examples directly into prompts',
+  },
+];
