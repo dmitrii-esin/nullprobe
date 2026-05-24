@@ -1,7 +1,7 @@
 {
   "name": "nullprobe",
   "version": "0.1.0",
-  "description": "Scaffold AI collaboration layers into any project",
+  "description": "Deep-void probe that deploys living, self-updating procedural memory, principles, guardrails, and skills before every mission.",
   "type": "module",
   "bin": {
     "nullprobe": "./dist/index.js"
