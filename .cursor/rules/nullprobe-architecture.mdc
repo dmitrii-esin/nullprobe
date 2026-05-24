@@ -1,0 +1,53 @@
+---
+description: nullprobe source architecture — how src/ is structured and key wiring rules
+alwaysApply: false
+globs: src/**/*.ts
+---
+
+# nullprobe Architecture
+
+## src/ Structure
+
+```
+src/
+├── index.ts                    # CLI entry (commander) — add new commands here
+├── types.ts                    # Shared types (AIPlatform, InitAnswers, etc.)
+├── commands/                   # Thin handlers — delegate to flows + scaffolder
+├── flows/                      # All user interaction (inquirer prompts)
+│   ├── init-flow.ts            # Conversational init dialogue
+│   └── update-flow.ts          # Conversational update check
+├── scaffolder/
+│   ├── index.ts                # Orchestrates writes — THE WIRING FILE (see below)
+│   ├── file-writer.ts          # mkdir + writeFile utility
+│   └── templates/              # Embedded string constants (one file per output file)
+│       ├── ai-framework.ts     # Reads AI_FRAMEWORK.md from repo root at runtime
+│       ├── skill-*.ts          # Each skill = one template file
+│       ├── wiki-index.ts       # wiki/index.md template
+│       └── wiki-log.ts         # wiki/log.md template (function, takes today's date)
+└── github/
+    ├── sources.ts              # Source repo definitions (single source of truth)
+    └── client.ts               # Fetch latest commit per repo
+```
+
+## Critical Wiring Rule
+
+When adding a new skill or output file:
+1. Create `src/scaffolder/templates/skill-<name>.ts` exporting a string constant
+2. Import it in `src/scaffolder/index.ts`
+3. Add it to the `files` array in the `scaffold()` function
+4. Also create `.claude/skills/<name>/SKILL.md` for this project's own use
+
+Missing step 3 means the skill template exists but is never written to disk.
+
+## Key Patterns
+
+- **Templates are embedded strings** — no runtime file reads (except `ai-framework.ts` which reads from repo root)
+- **Flow layer = user interaction** — all prompts live in `flows/`, scaffolder writes unconditionally
+- **Overwrite guard** is in `init-flow.ts`, not in the scaffolder
+- **GitHub calls are serial** — `checkAllSources()` loops, never concurrent
+
+## Adding a New Command
+
+1. Add command handler in `src/commands/<name>.ts`
+2. Add conversational flow in `src/flows/<name>-flow.ts`
+3. Register in `src/index.ts` via `program.command(...)`

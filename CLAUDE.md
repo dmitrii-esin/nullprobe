@@ -11,6 +11,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Run once → answer two questions → get a minimal but powerful AI-ready project structure.
 
+## Session Start
+
+Read `docs/CONTEXT.md` first — it has the live project status, what works, and recent changes. Update its "Recent changes" section after substantive work.
+
 ## Commands
 
 ```bash
@@ -42,11 +46,15 @@ Key patterns:
 
 ```
 target-project/
-├── AI_FRAMEWORK.md                          # Portable AI collaboration guide
-├── .claude/skills/nullprobe-intro/SKILL.md  # Orientation + research skill
-└── wiki/
-    ├── index.md                             # Content catalog
-    └── log.md                               # Chronological session record
+├── AI_FRAMEWORK.md
+├── wiki/
+│   ├── index.md
+│   └── log.md
+└── .claude/skills/
+    ├── nullprobe-intro/SKILL.md
+    ├── think-before-coding/SKILL.md
+    ├── simplicity-guard/SKILL.md
+    └── session-crystallize/SKILL.md
 ```
 
 ## Core Principle

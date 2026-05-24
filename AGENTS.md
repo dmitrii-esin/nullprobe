@@ -16,6 +16,10 @@ This project supports multiple AI environments working in parallel. Each has its
 |--------|---------|
 | `context7` | Live, version-specific documentation for installed dependencies |
 
+## Session Start
+
+Read `docs/CONTEXT.md` first — current status, what works, recent changes across all environments. Update "Recent changes" after substantive work.
+
 ## Shared Artifacts (all environments read/write)
 
 - `AI_FRAMEWORK.md` — portable AI collaboration guide (authoritative source of truth)

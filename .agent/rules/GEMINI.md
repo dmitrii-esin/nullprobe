@@ -34,6 +34,10 @@ TypeScript, ESM-only, npm distribution.
 
 Prefer not to edit other namespaces unless intentionally updating shared protocols.
 
+## Session Start
+
+Read `docs/CONTEXT.md` first — current status, what works, recent changes. Update "Recent changes" after substantive work.
+
 ## Shared Artifacts (read/write from any environment)
 
 - `AI_FRAMEWORK.md` — portable guide (authoritative)

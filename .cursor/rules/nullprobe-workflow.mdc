@@ -14,6 +14,10 @@ This project supports multiple AI environments in parallel:
 
 When working from Cursor, prefer not to edit `.claude/` or `.agent/` unless intentionally updating shared protocols.
 
+## Session Start
+
+Read `docs/CONTEXT.md` first — current status, what works, recent changes. Update "Recent changes" after substantive work.
+
 ## Shared Source of Truth
 
 - `AI_FRAMEWORK.md` — portable AI collaboration guide (authoritative)

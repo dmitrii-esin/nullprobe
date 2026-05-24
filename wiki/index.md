@@ -7,10 +7,11 @@
 
 ## Architecture Decisions
 
-- [ESM-only](decisions/esm-only.md) — all deps are ESM-only (inquirer, chalk, ora), so the project is `"type": "module"`
-- [Templates as strings](decisions/templates-as-strings.md) — embedded in TypeScript, no runtime file reads
-- [Serial GitHub calls](decisions/serial-github.md) — 7 requests over ~2-4s, avoids rate limits, preserves source order
-- [Overwrite guard in flow layer](decisions/overwrite-guard.md) — scaffolder writes unconditionally, flow layer asks first
+- **ESM-only** — all deps (inquirer, chalk, ora) are ESM-only; project uses `"type": "module"`
+- **Templates as strings** — skill/wiki content embedded as TypeScript string constants in `src/scaffolder/templates/`, no runtime file reads
+- **Serial GitHub calls** — `update` checks 7 sources one at a time (~2-4s), avoids rate limits, preserves source order
+- **Overwrite guard in flow layer** — `init-flow.ts` checks for existing files and asks; `scaffolder/index.ts` writes unconditionally
+- **Skills in `.claude/skills/`** — skills are Claude-native but patterns apply to all environments; cross-env rules replicated in `.cursor/rules/` and `.agent/rules/`
 
 ## Behavioral Principles (from Karpathy skills)
 
