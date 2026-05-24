@@ -1,0 +1,37 @@
+# Windsurf Rules — nullprobe
+
+## What this project is
+
+nullprobe: lightweight TypeScript CLI that scaffolds AI collaboration layers. Two questions, under 30 seconds. No overloading.
+
+## Session Start
+
+Read `docs/CONTEXT.md` first — current status, key files, recent changes.
+Read `AGENTS.md` for the multi-environment setup overview.
+
+## Source Architecture
+
+`src/index.ts` → commands → flows (inquirer) → scaffolder → templates (string constants)
+
+**Critical:** When adding a new skill template in `src/scaffolder/templates/`, you must also add it to the `files` array in `src/scaffolder/index.ts` or it will never be written.
+
+## Multi-Environment Namespaces
+
+This project runs Claude Code, Cursor, Antigravity, and Windsurf in parallel.
+Each owns its config directory — don't edit other namespaces unless updating shared protocols.
+Shared territory: `src/`, `AI_FRAMEWORK.md`, `wiki/`, `docs/CONTEXT.md`
+
+## Build Check
+
+`npm run build` must pass before finishing any work. TypeScript strict mode, ESM-only.
+
+## Behavioral Guidelines (Karpathy)
+
+- Think Before Coding — state assumptions, surface tradeoffs
+- Simplicity First — no speculative features or abstractions
+- Surgical Changes — every changed line traces to the request
+- Goal-Driven Execution — verifiable success criteria per step
+
+## Core Principle
+
+Lightweight above all. If a feature makes the tool more complex to use, it doesn't belong.

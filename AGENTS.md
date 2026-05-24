@@ -1,41 +1,69 @@
 # AGENTS.md
 
-This project supports multiple AI environments working in parallel. Each has its own namespace; all share the same source code, wiki, and AI_FRAMEWORK.md.
+This file is read by: **OpenAI Codex CLI**, **Cursor**, and any tool that follows the AGENTS.md convention.
 
-## Multi-Environment Setup
+This project supports multiple AI environments in parallel. Each has its own namespace; all share the same source code, wiki, and AI_FRAMEWORK.md.
 
-| Environment | Config Directory | MCP Config | Rules |
-|-------------|-----------------|------------|-------|
-| Claude Code | `.claude/` | `.mcp.json` | `CLAUDE.md` |
-| Cursor | `.cursor/` | `.cursor/mcp.json` | `.cursor/rules/*.mdc` |
-| Antigravity / Gemini CLI | `.agent/` | `.agent/mcp_config.json` | `.agent/rules/GEMINI.md` |
+## Where each tool finds its instructions
 
-## MCP Servers (keep in sync across all configs)
-
-| Server | Purpose |
-|--------|---------|
-| `context7` | Live, version-specific documentation for installed dependencies |
+| Tool | Primary instructions | Config namespace |
+|------|---------------------|-----------------|
+| Claude Code | `CLAUDE.md` | `.claude/`, `.mcp.json` |
+| Cursor | `AGENTS.md` + `.cursor/rules/*.mdc` | `.cursor/`, `.cursor/mcp.json` |
+| Gemini CLI (Google) | `GEMINI.md` | `.agent/`, `.agent/mcp_config.json` |
+| Antigravity | `.agent/rules/GEMINI.md` | `.agent/`, `.agent/mcp_config.json` |
+| OpenAI Codex CLI | `AGENTS.md` | (no separate namespace) |
+| GitHub Copilot | `.github/copilot-instructions.md` | (no separate namespace) |
+| Windsurf | `.windsurfrules` | (no separate namespace) |
 
 ## Session Start
 
-Read `docs/CONTEXT.md` first — current status, what works, recent changes across all environments. Update "Recent changes" after substantive work.
+Read `docs/CONTEXT.md` first — current project status, what works, recent changes.
+Update "Recent changes" after substantive work.
+
+## Source Architecture
+
+```
+src/
+├── index.ts                  # CLI entry (commander)
+├── commands/                 # Thin handlers — delegate to flows + scaffolder
+├── flows/                    # All user interaction (@inquirer/prompts)
+├── scaffolder/
+│   ├── index.ts              # Wiring file — add new output files HERE
+│   └── templates/            # Embedded string constants, one per output file
+└── github/
+    ├── sources.ts            # 7 tracked source repos
+    └── client.ts             # GitHub API (serial, unauthenticated)
+```
+
+**Critical wiring rule:** Adding a new skill requires two steps:
+1. Create `src/scaffolder/templates/skill-<name>.ts`
+2. Add to `files` array in `src/scaffolder/index.ts` — missing this means it's never written
+
+## MCP Servers (keep in sync across all configs)
+
+| Server | Claude | Cursor | Antigravity |
+|--------|--------|--------|-------------|
+| `context7` | `.mcp.json` | `.cursor/mcp.json` | `.agent/mcp_config.json` |
 
 ## Shared Artifacts (all environments read/write)
 
-- `AI_FRAMEWORK.md` — portable AI collaboration guide (authoritative source of truth)
-- `wiki/index.md` — knowledge catalog (read at session start)
-- `wiki/log.md` — chronological session record (append after substantive work)
-- `src/` — shared TypeScript source code
+- `docs/CONTEXT.md` — live project snapshot (read at session start, update after work)
+- `AI_FRAMEWORK.md` — portable AI collaboration guide (authoritative)
+- `wiki/index.md` — knowledge catalog
+- `wiki/log.md` — session record (append with `## [YYYY-MM-DD] type | title`)
+- `src/` — shared TypeScript source
 
 ## Namespace Protection
 
-Each AI environment owns its config directory. When working from one environment, prefer not to edit another's config unless intentionally updating shared protocols:
+Each AI environment owns its config directory:
+- `.claude/` — Claude Code (skills, settings)
+- `.cursor/` — Cursor (rules, MCP)
+- `.agent/` — Antigravity / Gemini CLI (rules, MCP)
 
-- Claude Code owns `.claude/` — skills, agents, commands
-- Cursor owns `.cursor/` — rules (`.mdc`), MCP config
-- Antigravity owns `.agent/` — rules, MCP config, scripts
+Don't edit another environment's namespace unless intentionally updating shared protocols.
 
-## Skills (installed for all environments via `.claude/skills/`)
+## Skills (in `.claude/skills/` — patterns apply to all environments)
 
 | Skill | Source | Invoke when... |
 |-------|--------|----------------|
@@ -48,10 +76,17 @@ Each AI environment owns its config directory. When working from one environment
 ## Behavioral Guidelines (same across all environments)
 
 1. **Think Before Coding** — state assumptions, surface tradeoffs, ask if unclear
-2. **Simplicity First** — minimum code that solves the problem, nothing speculative
-3. **Surgical Changes** — touch only what you must, every changed line traces to the request
-4. **Goal-Driven Execution** — define verifiable success criteria, loop until verified
+2. **Simplicity First** — no features beyond what was asked, no speculative abstractions
+3. **Surgical Changes** — every changed line traces to the request
+4. **Goal-Driven Execution** — verifiable success criteria, loop until verified
+
+## Build
+
+```bash
+npm run build    # TypeScript must compile clean
+npm run dev -- init /tmp/test   # Test scaffold output
+```
 
 ## Core Principle
 
-**Lightweight above all.** This tool exists because the AI tooling space is overloaded with fragile multi-framework designs. nullprobe asks two questions and deploys the essentials. Every feature must pass: "Does this make the tool simpler to use, or more complex?"
+**Lightweight above all.** Every feature must pass: "Does this make the tool simpler to use, or more complex?"
