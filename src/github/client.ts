@@ -13,6 +13,7 @@ export async function getLatestCommit(source: SourceRepo): Promise<CommitInfo | 
       const data = (await res.json()) as {
         history: Array<{ version: string; committed_at: string }>;
       };
+      if (!data.history?.length) return null;
       const latest = data.history[0];
       return {
         sourceId: source.id,
@@ -28,6 +29,7 @@ export async function getLatestCommit(source: SourceRepo): Promise<CommitInfo | 
       per_page: 1,
     });
 
+    if (!data.length) return null;
     return {
       sourceId: source.id,
       latestSha: data[0].sha.slice(0, 7),
