@@ -1,6 +1,6 @@
 # GitHub Copilot Instructions — nullprobe
 
-nullprobe is a lightweight TypeScript CLI (Node.js, ESM-only) that scaffolds AI collaboration layers into projects. Two questions at runtime, under 30 seconds.
+nullprobe: Deep-void probe that deploys living, self-updating procedural memory, principles, guardrails, and skills before every mission.
 
 ## Session Start
 

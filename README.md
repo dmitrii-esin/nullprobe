@@ -1,6 +1,6 @@
 # nullprobe
 
-A lightweight CLI that deploys a living AI collaboration layer into your project.
+Deep-void probe that deploys living, self-updating procedural memory, principles, guardrails, and skills before every mission.
 
 Instead of overloading you with multi-framework, multi-repo, multi-tool fragile setups, nullprobe asks two questions and gets out of the way:
 
@@ -12,7 +12,11 @@ That's it. Under 30 seconds. Your project gets a compounding knowledge layer tha
 ## Install
 
 ```bash
-npm install -g nullprobe
+git clone https://github.com/dmitrii-esin/nullprobe.git
+cd nullprobe
+npm install
+npm run build
+npm link
 ```
 
 ## Usage

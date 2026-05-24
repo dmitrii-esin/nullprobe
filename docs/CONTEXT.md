@@ -5,7 +5,7 @@
 
 ## What this project is
 
-nullprobe v0.1 — a lightweight CLI (TypeScript, npm) that scaffolds an AI collaboration layer into any project. Two questions, under 30 seconds.
+nullprobe v0.1 — Deep-void probe that deploys living, self-updating procedural memory, principles, guardrails, and skills before every mission.
 
 ## Current status
 

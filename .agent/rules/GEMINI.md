@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-nullprobe is a lightweight CLI that deploys AI collaboration layers into projects.
+nullprobe: Deep-void probe that deploys living, self-updating procedural memory, principles, guardrails, and skills before every mission.
 TypeScript, ESM-only, npm distribution.
 
 ## Universal Coding Behavior (Karpathy Guidelines)

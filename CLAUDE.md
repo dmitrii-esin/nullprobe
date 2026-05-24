@@ -4,12 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**nullprobe** is a lightweight CLI tool that deploys a living AI collaboration layer into any project. Instead of overloading users with multi-framework, multi-repo, multi-tool fragile designs, it provides a simple conversational interface:
-
-1. "What AI environment are you going to use?"
-2. "Do you want recommended tools, something specific, or should I search for compatible tools?"
-
-Run once → answer two questions → get a minimal but powerful AI-ready project structure.
+**nullprobe** — Deep-void probe that deploys living, self-updating procedural memory, principles, guardrails, and skills before every mission.
 
 ## Session Start
 
