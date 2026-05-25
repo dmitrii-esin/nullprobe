@@ -21,10 +21,10 @@ describe('scaffolder index', () => {
     expect(written).toContain('AI_FRAMEWORK.md');
     expect(written).toContain('wiki/index.md');
     expect(written).toContain('wiki/log.md');
-    
-    // No extras for claude, no skills
-    expect(fileWriter.writeExtraFile).not.toHaveBeenCalled();
+    expect(written).toContain('.mcp.json');
+
     expect(fileWriter.writeFile).toHaveBeenCalledTimes(3);
+    expect(fileWriter.writeExtraFile).toHaveBeenCalledTimes(1); // .mcp.json
   });
 
   it('scaffolds claude with skills', async () => {
@@ -38,8 +38,27 @@ describe('scaffolder index', () => {
     });
 
     expect(written).toContain('.claude/skills/nullprobe-intro/SKILL.md');
-    expect(fileWriter.writeExtraFile).not.toHaveBeenCalled();
+    expect(written).toContain('.mcp.json');
     expect(fileWriter.writeFile).toHaveBeenCalledTimes(7); // 3 base + 4 skills
+    expect(fileWriter.writeExtraFile).toHaveBeenCalledTimes(1); // .mcp.json
+  });
+
+  it('scaffolds gemini-cli with skills', async () => {
+    vi.mocked(fileWriter.writeFile).mockClear();
+    vi.mocked(fileWriter.writeExtraFile).mockClear();
+
+    const written = await scaffold({
+      targetPath: '/tmp/target',
+      platform: 'gemini-cli',
+      installSkill: true
+    });
+
+    expect(written).toContain('.gemini/settings.json');
+    expect(written).toContain('.claude/skills/nullprobe-intro/SKILL.md');
+    expect(written).not.toContain('.agent/mcp_config.json');
+
+    expect(fileWriter.writeFile).toHaveBeenCalledTimes(7); // 3 base + 4 skills
+    expect(fileWriter.writeExtraFile).toHaveBeenCalledTimes(1); // .gemini/settings.json
   });
 
   it('scaffolds cursor with skills', async () => {

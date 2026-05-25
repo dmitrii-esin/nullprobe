@@ -7,3 +7,5 @@ dist/
 .antigravitycli/
 coverage/
 .env
+.env.local
+.env.*.local

@@ -18,6 +18,17 @@ npm run dev -- update        # Check source repos for new techniques
 npm run build                # Compile to dist/
 ```
 
+## Protocols
+
+Operational runbooks for recurring tasks live in [`/protocols/`](protocols/README.md). Read and follow them — no extra instructions needed.
+
+| Task | Runbook | npm script |
+|------|---------|------------|
+| Discover new tools | [`protocols/exploration.md`](protocols/exploration.md) | `npm run protocol:explore` |
+| Verify before release | [`protocols/verification.md`](protocols/verification.md) | `npm run protocol:verify` |
+| Security check | [`protocols/security.md`](protocols/security.md) | `npm run protocol:security` |
+| Clean workspace | [`protocols/cleanup.md`](protocols/cleanup.md) | `npm run protocol:cleanup` |
+
 ## Architecture
 
 ```

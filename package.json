@@ -14,7 +14,12 @@
   "scripts": {
     "build": "tsc && chmod +x dist/index.js",
     "dev": "tsx src/index.ts",
-    "test": "vitest run --coverage"
+    "test": "vitest run --coverage",
+    "protocol:verify": "rm -rf dist && npm run build && npm test",
+    "protocol:security": "npm audit && grep -rn -e 'api[_-]key\\s*=' -e 'secret\\s*=' -e 'password\\s*=' -e 'token\\s*=' --include='*.ts' --include='*.js' --include='*.json' --exclude-dir=node_modules --exclude-dir=dist --exclude-dir=.git . || true && npm pack --dry-run",
+    "protocol:cleanup": "rm -rf dist coverage tsconfig.tsbuildinfo *.tgz /tmp/test-probe /tmp/test-cursor /tmp/test-antigravity /tmp/test-gemini && find . -name '.DS_Store' -not -path '*/.git/*' -delete && echo 'Cleanup complete.'",
+    "protocol:cleanup:dry": "echo '=== DRY RUN ===' && echo 'dist/:' && ls dist/ 2>/dev/null && echo 'coverage/:' && ls coverage/ 2>/dev/null && echo '*.tgz:' && ls *.tgz 2>/dev/null && find . -name '.DS_Store' -not -path '*/.git/*' && echo '(dry run — nothing deleted)' || true",
+    "protocol:explore": "echo 'Run protocols/exploration.md manually — web search steps require human or AI execution. See: npm run dev -- update'"
   },
   "engines": {
     "node": ">=18.0.0"

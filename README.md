@@ -94,6 +94,17 @@ npm run build                    # Compile TypeScript
 
 See `AGENTS.md` for multi-environment contribution setup.
 
+## Protocols
+
+Operational runbooks live in [`/protocols/`](protocols/README.md). Any AI in this workspace can locate and follow them without extra instructions.
+
+| Protocol | Purpose | npm script |
+|----------|---------|------------|
+| [Exploration](protocols/exploration.md) | Discover AI environment updates and new tools | `npm run protocol:explore` |
+| [Verification](protocols/verification.md) | Full test + spec cross-check before release | `npm run protocol:verify` |
+| [Security](protocols/security.md) | OWASP scan, secrets, deps, permissions | `npm run protocol:security` |
+| [Cleanup](protocols/cleanup.md) | Remove artifacts, restore clean workspace | `npm run protocol:cleanup` |
+
 ## License
 
 MIT

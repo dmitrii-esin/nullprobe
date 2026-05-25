@@ -8,6 +8,7 @@ export async function getLatestCommit(source: SourceRepo): Promise<CommitInfo | 
     if (source.gistId) {
       const res = await fetch(`https://api.github.com/gists/${source.gistId}`, {
         headers: { 'User-Agent': 'nullprobe-cli' },
+        signal: AbortSignal.timeout(10_000),
       });
       if (!res.ok) return null;
       const data = (await res.json()) as {

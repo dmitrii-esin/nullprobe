@@ -87,6 +87,17 @@ npm run build    # TypeScript must compile clean
 npm run dev -- init /tmp/test   # Test scaffold output
 ```
 
+## Protocols
+
+Operational runbooks live in [`/protocols/`](protocols/README.md). Read and follow them for recurring tasks:
+
+| Task | Runbook |
+|------|---------|
+| Discover new tools / techniques | [`protocols/exploration.md`](protocols/exploration.md) |
+| Verify before releasing | [`protocols/verification.md`](protocols/verification.md) |
+| Security check | [`protocols/security.md`](protocols/security.md) |
+| Clean workspace | [`protocols/cleanup.md`](protocols/cleanup.md) |
+
 ## Core Principle
 
 **Lightweight above all.** Every feature must pass: "Does this make the tool simpler to use, or more complex?"

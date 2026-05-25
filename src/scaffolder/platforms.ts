@@ -10,7 +10,7 @@ export interface PlatformConfig {
 export const PLATFORMS: Record<string, PlatformConfig> = {
   claude: {
     skillPath: (name) => `.claude/skills/${name}/SKILL.md`,
-    detectPaths: ['.claude/skills/nullprobe-intro/SKILL.md'],
+    detectPaths: ['.claude/skills/nullprobe-intro/SKILL.md', '.mcp.json'],
     extraFiles: () => [],
   },
 
@@ -28,7 +28,7 @@ export const PLATFORMS: Record<string, PlatformConfig> = {
 
   'gemini-cli': {
     skillPath: (name) => `.claude/skills/${name}/SKILL.md`,
-    detectPaths: ['.claude/skills/nullprobe-intro/SKILL.md'],
+    detectPaths: ['.claude/skills/nullprobe-intro/SKILL.md', '.gemini/settings.json'],
     extraFiles: () => [],
   },
 

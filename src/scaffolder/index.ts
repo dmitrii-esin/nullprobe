@@ -125,11 +125,16 @@ function platformExtras(answers: InitAnswers): ExtraFile[] {
         },
       ];
 
-    // NOTE: gemini-cli and antigravity share the same MCP config path today.
-    // See the divergence table above — split this case before adding any
-    // platform-specific rule files, skill paths, or hook configs.
-    case 'antigravity':
     case 'gemini-cli':
+      return [
+        {
+          relPath: '.gemini/settings.json',
+          content: MCP_CONTEXT7_CONFIG,
+          ifExists: 'merge-mcp',
+        },
+      ];
+
+    case 'antigravity':
       return [
         {
           relPath: '.agent/mcp_config.json',
@@ -139,6 +144,14 @@ function platformExtras(answers: InitAnswers): ExtraFile[] {
       ];
 
     case 'claude':
+      return [
+        {
+          relPath: '.mcp.json',
+          content: MCP_CONTEXT7_CONFIG,
+          ifExists: 'merge-mcp',
+        },
+      ];
+
     default:
       return [];
   }

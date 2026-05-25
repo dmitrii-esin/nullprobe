@@ -14,7 +14,7 @@ nullprobe v0.2 — Deep-void probe that deploys living, self-updating procedural
 | `nullprobe init` | Working — scaffolds 4 skills + wiki + AI_FRAMEWORK.md |
 | `nullprobe update` | Working — GitHub and Tavily search backends live; results logged to wiki |
 | npm publish | Not published — install from source |
-| Multi-env scaffold | Claude (.claude/skills/), Cursor (.cursor/rules/*.mdc), Antigravity (.antigravitycli/rules/*.md), Gemini CLI (.claude/skills/ fallback) |
+| Multi-env scaffold | Claude (.claude/skills/ + .mcp.json), Cursor (.cursor/rules/*.mdc + .cursor/mcp.json), Antigravity (.antigravitycli/rules/*.md + .agent/mcp_config.json), Gemini CLI (.claude/skills/ + .gemini/settings.json) |
 
 ## Key files
 
@@ -38,11 +38,31 @@ nullprobe v0.2 — Deep-void probe that deploys living, self-updating procedural
 See `docs/PLAN.md` for the full development plan with test coverage scope, verification checklist, and multi-registry distribution research.
 
 Current backlog highlights:
-- Test coverage (Vitest, ≥80% branch on core modules) — not started
-- Verification plan — documented in PLAN.md §2, run before each release
+- Test coverage (Vitest, ≥80% branch on core modules) — **DONE** (89.81% branch, 46 tests)
+- Verification plan — documented in PLAN.md §2, run before each release — **DONE** (all 8 scenarios passed)
 - Language-agnostic distribution: Phase 1 (Bun binary CI), Phase 2 (curl install script), Phase 3 (Homebrew tap, Scoop) — not started
 
 ## Recent changes
+
+### 2026-05-25 — MCP config paths fixed + tests + verification (Claude Code session)
+- `src/scaffolder/index.ts` — Claude now scaffolds `.mcp.json` (was empty); Gemini CLI now uses `.gemini/settings.json` (was `.agent/mcp_config.json`); cases split
+- `src/scaffolder/platforms.ts` — detectPaths updated for claude and gemini-cli
+- `src/github/client.ts` — added `AbortSignal.timeout(10_000)` to gist fetch (was hanging indefinitely on unreachable gist)
+- Test suite: 46 tests, 89.81% branch coverage — all pass
+- `verify.sh` — e2e verification script (expect-driven init + direct API tests for update)
+- `docs/PLAN.md` §2 verification — all 8 scenarios confirmed passing
+- `.gitignore` — added `.env.local` and `.env.*.local`
+- `.env.local` — Tavily API key (gitignored)
+
+### 2026-05-25 — protocols added (Claude Code session)
+- `protocols/README.md` — index and discovery instructions for all runbooks
+- `protocols/exploration.md` — AI environment discovery runbook (web/X/Reddit/repo sources)
+- `protocols/verification.md` — deterministic test + manual test + spec cross-check runbook
+- `protocols/security.md` — OWASP Top 10 / secrets / deps / permissions security runbook
+- `protocols/cleanup.md` — artifact cleanup with dry-run mode
+- `protocols/prompts/protocol-spec.md` — original prompt saved for reference
+- `package.json` — added `protocol:verify`, `protocol:security`, `protocol:cleanup`, `protocol:cleanup:dry`, `protocol:explore` scripts
+- `CLAUDE.md`, `AGENTS.md`, `README.md` — all updated to reference `/protocols/`
 
 ### 2026-05-25 — v0.2 shipped (Claude Code session)
 - `src/scaffolder/skill-to-mdc.ts` — SKILL.md → Cursor .mdc transformer (parseSkillMeta, stripSkillFrontmatter, wrapAsMdc)

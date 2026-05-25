@@ -41,6 +41,7 @@ Expected files:
 - [ ] `/tmp/test-claude/AI_FRAMEWORK.md` exists and is non-empty
 - [ ] `/tmp/test-claude/wiki/index.md` exists
 - [ ] `/tmp/test-claude/wiki/log.md` exists
+- [ ] `/tmp/test-claude/.mcp.json` — valid JSON with `mcpServers.context7`
 - [ ] `/tmp/test-claude/.claude/skills/nullprobe-intro/SKILL.md` — contains `name: nullprobe-intro`
 - [ ] `/tmp/test-claude/.claude/skills/think-before-coding/SKILL.md` exists
 - [ ] `/tmp/test-claude/.claude/skills/simplicity-guard/SKILL.md` exists
@@ -88,9 +89,9 @@ rm -rf /tmp/test-gemini && npm run dev -- init /tmp/test-gemini
 
 Expected files:
 - [ ] `/tmp/test-gemini/AI_FRAMEWORK.md` exists
-- [ ] `/tmp/test-gemini/.agent/mcp_config.json` — valid JSON with `mcpServers.context7`
+- [ ] `/tmp/test-gemini/.gemini/settings.json` — valid JSON with `mcpServers.context7`
 - [ ] `/tmp/test-gemini/.claude/skills/nullprobe-intro/SKILL.md` exists (fallback)
-- [ ] No `.cursor/rules/` or `.antigravitycli/rules/` created
+- [ ] No `.cursor/rules/`, `.antigravitycli/rules/`, or `.agent/` created
 
 ### 2.5 Overwrite guard + MCP merge safety
 

@@ -97,3 +97,19 @@
   Next: set TAVILY_API_KEY then run: nullprobe update
 
 ---
+
+## [2026-05-25] security | Security protocol run — CLEAR
+
+  Overall status: CLEAR
+
+  Check | Status | Finding
+  Secrets scan | PASS | 2 matches, both false positives: env-var read (github.ts) + placeholder text (update-flow.ts)
+  Dependency audit | PASS | 0 vulnerabilities (npm audit clean)
+  Command injection | PASS | No exec/spawn/eval in src/; all paths via path.resolve()
+  File write scope | PASS | All writes under path.resolve(userTarget); no system paths
+  Network requests | PASS | HTTPS only; Tavily key in Authorization header, not URL; AbortSignal.timeout on all fetch calls
+  Exposed files | PASS | .env/.env.local in .gitignore; git ls-files shows no secrets; npm pack contains only dist/ + docs
+  Permission scope | PASS | No postinstall/preinstall scripts; bin is nullprobe only
+  OWASP cross-check | PASS | A01/A03/A05/A06/A09 covered; A02/A07/A10 not applicable
+
+---
