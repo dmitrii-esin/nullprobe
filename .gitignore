@@ -5,3 +5,5 @@ dist/
 *.d.ts.map
 .claude/settings.local.json
 .antigravitycli/
+coverage/
+.env

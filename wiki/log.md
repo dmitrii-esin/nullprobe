@@ -43,3 +43,57 @@
   MCP: context7 configured across all 3 environments (.mcp.json, .cursor/mcp.json, .agent/mcp_config.json)
   Created AGENTS.md as the multi-tool overview doc (Cursor reads this as root instructions)
   Behavioral rules (Karpathy) replicated in each tool's native format
+
+## [2026-05-25] search | GitHub search: "memory management"
+
+  Query: memory management
+  Backend: github
+  Results: 0
+
+---
+
+## [2026-05-25] search | GitHub search: "memory management"
+
+  Query: memory management
+  Backend: github
+  Results: 0
+
+---
+
+## [2026-05-25] search | GitHub search: "memory management"
+
+  Query: memory management
+  Backend: github
+  Results: 0
+
+---
+
+## [2026-05-25] search | GitHub search: "memory management"
+
+  Query: memory management
+  Backend: github
+  Results: 0
+
+---
+
+## [2026-05-25] search | Tavily search: "cursor rules 2025"
+
+  Query: cursor rules 2025
+  Backend: tavily
+  Results: 7
+  - Ultimate Cursor AI IDE Rules Guide: All 5 Levels and ... - YouTube — https://www.youtube.com/watch?v=gw8otRr2zpw
+  - Top Cursor Rules for Coding Agents - PromptHub — https://www.prompthub.us/blog/top-cursor-rules-for-coding-agents
+  - How To Use Cursor AI (Full Tutorial For Beginners 2025) - YouTube — https://www.youtube.com/watch?v=cE84Q5IRR6U
+  - Cursor IDE Rules for AI: Guidelines for Specialized AI Assistant — https://kirill-markin.com/articles/cursor-ide-rules-for-ai
+  - Cursor Rules in Action: How Our Engineers Use It at Atlan — https://blog.atlan.com/engineering/cursor-rules
+
+---
+
+## [2026-05-25] search | Queued Tavily search: "test"
+
+  Query: test
+  Backend: tavily — not yet configured
+  Blocked by: TAVILY_API_KEY not set
+  Next: set TAVILY_API_KEY then run: nullprobe update
+
+---
