@@ -4,6 +4,62 @@ Live backlog for nullprobe. Add items here; move to CONTEXT.md "Recent changes" 
 
 ---
 
+## 0. MCP Customization (in flight)
+
+**Status:** Implementation done — needs e2e verification across all 4 platforms before shipping.
+
+**Goal:** Let users opt into extra MCP servers during `nullprobe init` without violating the "two questions and done" philosophy.
+
+**Default behavior (unchanged):** scaffold `context7` only. User answers `N` (or just presses Enter) to the new confirm prompt.
+
+**Opt-in flow:**
+
+1. New confirm in `src/flows/init-flow.ts`: `"Customize MCP servers? (default scaffolds context7 only)"` — default `false`.
+2. If `true`, an `@inquirer/prompts` `checkbox` is shown with the registry from `src/scaffolder/templates/mcp-context7.ts → EXTRA_MCP_CHOICES`.
+3. Selected IDs flow as `InitAnswers.extraMcps` into the scaffolder, which calls `buildMcpConfig(extras)` to produce the merged MCP config (context7 + selected extras) for the platform-specific path.
+
+**Optional MCP registry (current):**
+
+| ID | Package | Why |
+|----|---------|-----|
+| `shadcn` | `npx shadcn@latest mcp` | UI component registry — useful in shadcn-based projects |
+| `chrome-devtools` | `npx -y chrome-devtools-mcp` | Browser debugging from the AI |
+| `github` | `npx -y @modelcontextprotocol/server-github` | Repo/issue/PR access; needs `GITHUB_PERSONAL_ACCESS_TOKEN` |
+
+**To finish:**
+
+- [ ] Manual e2e: run `npm run dev -- init /tmp/test-mcp-custom` for each of the 4 platforms with one or more extras selected; confirm the produced MCP config contains exactly the expected servers and that `merge-mcp` still preserves user-added entries on re-run.
+- [ ] Update `docs/PLAN.md` §2 verification — add an `2.9` scenario for MCP customization.
+- [ ] Consider widening the registry once we have data on what users actually want (track requests in `wiki/log.md`).
+
+**Dev-session note:** The repo's own MCP configs (`.mcp.json`, `.cursor/mcp.json`, `.agent/mcp_config.json`, `.gemini/settings.json`) ship with all 4 MCPs (context7 + shadcn + chrome-devtools + github) so contributors hacking on nullprobe have full tooling. The CLI **does not** scaffold this expanded set into target projects by default — it stays lean (context7 only) unless the user opts into extras via the new prompt.
+
+---
+
+## 0a. MCP Discovery Source
+
+**Status:** Not started
+
+**Goal:** Surface new/popular MCPs to users via `nullprobe update` and `protocols/exploration.md` so the optional-MCP registry stays current without manual curation.
+
+**Candidates:**
+
+| Source | Type | Notes |
+|--------|------|-------|
+| [mcp.so](https://mcp.so) | Aggregator, web-scrape | Largest community catalog. No public API confirmed — would need HTML scrape or RSS. |
+| [smithery.ai](https://smithery.ai) | Aggregator + registry | Has a documented registry JSON; first choice if API is stable. |
+| [glama.ai/mcp](https://glama.ai/mcp/servers) | Aggregator | Quality-curated; useful for "trending" signal. |
+| `modelcontextprotocol/servers` GitHub | Official | Already accessible via existing `@octokit/rest` plumbing in `src/github/`. Cheapest first hop. |
+
+**Action items:**
+
+1. Pick the registry/API with the most reliable JSON endpoint (likely Smithery).
+2. Add a new source to `src/github/sources.ts` (or a new `src/search/mcp-registry.ts` if non-GitHub) returning `{ name, package, description, popularity }` rows.
+3. Add an "MCP discovery" branch to `nullprobe update` that appends findings to `wiki/log.md` like the existing search backends.
+4. Document in `protocols/exploration.md` as a third source (after Tavily and GitHub).
+
+---
+
 ## 1. Test Coverage
 
 **Status:** Not started
@@ -153,6 +209,23 @@ Expected:
 - [ ] Setup instructions printed (sign-up URL, export command, reload + re-run)
 - [ ] `wiki/log.md` has a `Queued Tavily search` entry (not a real search entry)
 - [ ] Process exits cleanly (no error thrown)
+
+### 2.9 Optional MCP customization
+
+```bash
+rm -rf /tmp/test-mcp-custom && npm run dev -- init /tmp/test-mcp-custom
+# Select: Claude → recommended → confirm path
+# At "Customize MCP servers?" answer: Y
+# In checkbox: pick shadcn + github
+```
+
+Expected:
+- [ ] `/tmp/test-mcp-custom/.mcp.json` contains `mcpServers.context7`, `mcpServers.shadcn`, `mcpServers.github`
+- [ ] `mcpServers.github.env.GITHUB_PERSONAL_ACCESS_TOKEN` is the literal `${GITHUB_PERSONAL_ACCESS_TOKEN}` (env-var ref, not a real token)
+- [ ] No `chrome-devtools` entry
+- [ ] Re-run with the same selections + a manually-added third server → merge-mcp preserves the manual entry
+
+Repeat with `cursor`, `gemini-cli`, `antigravity` to confirm parity at `.cursor/mcp.json`, `.gemini/settings.json`, `.agent/mcp_config.json`.
 
 ---
 

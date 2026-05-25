@@ -44,6 +44,15 @@ Current backlog highlights:
 
 ## Recent changes
 
+### 2026-05-25 — Dev MCP expansion + optional-MCP customization step (Claude Code session)
+- Dev MCP configs in repo root (`.mcp.json`, `.cursor/mcp.json`, `.agent/mcp_config.json`, new `.gemini/settings.json`) now include `context7`, `shadcn`, `chrome-devtools`, `github` MCPs for contributor sessions — NOT shipped via init by default
+- `src/scaffolder/templates/mcp-context7.ts` refactored — exports `buildMcpConfig(extras)` builder + `EXTRA_MCP_CHOICES` registry; `MCP_CONTEXT7_CONFIG` kept for back-compat
+- `src/types.ts` — `InitAnswers.extraMcps: ExtraMcpId[]` added; new `ExtraMcpId` union type
+- `src/flows/init-flow.ts` — new optional confirm + checkbox: "Customize MCP servers?" (default off → context7 only)
+- `src/scaffolder/index.ts` — `platformExtras()` now uses `buildMcpConfig(answers.extraMcps)` instead of the static constant
+- Tests: 47 pass (added 1), branch coverage 88.49%
+- `docs/PLAN.md` — new §0 (MCP customization tracker), §0a (MCP discovery aggregator roadmap), §2.9 (verification scenario)
+
 ### 2026-05-25 — MCP config paths fixed + tests + verification (Claude Code session)
 - `src/scaffolder/index.ts` — Claude now scaffolds `.mcp.json` (was empty); Gemini CLI now uses `.gemini/settings.json` (was `.agent/mcp_config.json`); cases split
 - `src/scaffolder/platforms.ts` — detectPaths updated for claude and gemini-cli

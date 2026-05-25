@@ -8,7 +8,7 @@ import { SKILL_SIMPLICITY_GUARD } from './templates/skill-simplicity-guard.js';
 import { SKILL_SESSION_CRYSTALLIZE } from './templates/skill-session-crystallize.js';
 import { WIKI_INDEX } from './templates/wiki-index.js';
 import { wikiLog } from './templates/wiki-log.js';
-import { MCP_CONTEXT7_CONFIG } from './templates/mcp-context7.js';
+import { buildMcpConfig } from './templates/mcp-context7.js';
 import { PLATFORMS } from './platforms.js';
 
 export async function scaffold(answers: InitAnswers): Promise<string[]> {
@@ -115,12 +115,14 @@ export async function scaffold(answers: InitAnswers): Promise<string[]> {
 // ---------------------------------------------------------------------------
 
 function platformExtras(answers: InitAnswers): ExtraFile[] {
+  const mcpContent = buildMcpConfig(answers.extraMcps ?? []);
+
   switch (answers.platform) {
     case 'cursor':
       return [
         {
           relPath: '.cursor/mcp.json',
-          content: MCP_CONTEXT7_CONFIG,
+          content: mcpContent,
           ifExists: 'merge-mcp',
         },
       ];
@@ -129,7 +131,7 @@ function platformExtras(answers: InitAnswers): ExtraFile[] {
       return [
         {
           relPath: '.gemini/settings.json',
-          content: MCP_CONTEXT7_CONFIG,
+          content: mcpContent,
           ifExists: 'merge-mcp',
         },
       ];
@@ -138,7 +140,7 @@ function platformExtras(answers: InitAnswers): ExtraFile[] {
       return [
         {
           relPath: '.agent/mcp_config.json',
-          content: MCP_CONTEXT7_CONFIG,
+          content: mcpContent,
           ifExists: 'merge-mcp',
         },
       ];
@@ -147,7 +149,7 @@ function platformExtras(answers: InitAnswers): ExtraFile[] {
       return [
         {
           relPath: '.mcp.json',
-          content: MCP_CONTEXT7_CONFIG,
+          content: mcpContent,
           ifExists: 'merge-mcp',
         },
       ];

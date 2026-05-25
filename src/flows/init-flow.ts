@@ -1,9 +1,10 @@
-import { select, input, confirm } from '@inquirer/prompts';
+import { select, input, confirm, checkbox } from '@inquirer/prompts';
 import chalk from 'chalk';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import type { AIPlatform, InitAnswers } from '../types.js';
+import type { AIPlatform, ExtraMcpId, InitAnswers } from '../types.js';
 import { PLATFORMS } from '../scaffolder/platforms.js';
+import { EXTRA_MCP_CHOICES } from '../scaffolder/templates/mcp-context7.js';
 
 export async function runInitFlow(targetPath: string): Promise<InitAnswers> {
   console.log(chalk.bold('\n  nullprobe v0.1\n'));
@@ -74,6 +75,8 @@ export async function runInitFlow(targetPath: string): Promise<InitAnswers> {
     });
   }
 
+  const extraMcps = await pickExtraMcps();
+
   const finalPath = path.resolve(targetPath);
   const platformConfig = PLATFORMS[platform];
   const existingFiles = await checkExistingFiles(finalPath, platformConfig.detectPaths);
@@ -90,7 +93,24 @@ export async function runInitFlow(targetPath: string): Promise<InitAnswers> {
     }
   }
 
-  return { platform, targetPath: finalPath, installSkill };
+  return { platform, targetPath: finalPath, installSkill, extraMcps };
+}
+
+async function pickExtraMcps(): Promise<ExtraMcpId[]> {
+  const customize = await confirm({
+    message: 'Customize MCP servers? (default scaffolds context7 only)',
+    default: false,
+  });
+  if (!customize) return [];
+
+  const picked = await checkbox<ExtraMcpId>({
+    message: 'Pick optional MCPs to scaffold alongside context7:',
+    choices: EXTRA_MCP_CHOICES.map((c) => ({
+      name: `${c.label} — ${c.description}`,
+      value: c.id,
+    })),
+  });
+  return picked;
 }
 
 async function checkExistingFiles(base: string, toCheck: string[]): Promise<string[]> {

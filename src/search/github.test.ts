@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { enrichQuery, searchGitHub, RateLimitError } from './github.js';
 
 vi.mock('@octokit/rest', () => {
-  const Octokit = vi.fn();
+  const Octokit = vi.fn() as unknown as { prototype: { search: { repos: ReturnType<typeof vi.fn>; code: ReturnType<typeof vi.fn> } } };
   Octokit.prototype.search = {
     repos: vi.fn(),
     code: vi.fn(),
@@ -12,8 +12,9 @@ vi.mock('@octokit/rest', () => {
 import { Octokit } from '@octokit/rest';
 import { RequestError } from '@octokit/request-error';
 
-const mockRepos = () => Octokit.prototype.search.repos as ReturnType<typeof vi.fn>;
-const mockCode = () => Octokit.prototype.search.code as ReturnType<typeof vi.fn>;
+const octokitMock = Octokit as unknown as { prototype: { search: { repos: ReturnType<typeof vi.fn>; code: ReturnType<typeof vi.fn> } } };
+const mockRepos = () => octokitMock.prototype.search.repos;
+const mockCode = () => octokitMock.prototype.search.code;
 
 const emptyRepos = { data: { items: [] } };
 const emptyCode = { data: { items: [] } };

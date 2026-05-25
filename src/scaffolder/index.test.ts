@@ -15,7 +15,8 @@ describe('scaffolder index', () => {
     const written = await scaffold({
       targetPath: '/tmp/target',
       platform: 'claude',
-      installSkill: false
+      installSkill: false,
+      extraMcps: []
     });
 
     expect(written).toContain('AI_FRAMEWORK.md');
@@ -34,7 +35,8 @@ describe('scaffolder index', () => {
     const written = await scaffold({
       targetPath: '/tmp/target',
       platform: 'claude',
-      installSkill: true
+      installSkill: true,
+      extraMcps: []
     });
 
     expect(written).toContain('.claude/skills/nullprobe-intro/SKILL.md');
@@ -50,7 +52,8 @@ describe('scaffolder index', () => {
     const written = await scaffold({
       targetPath: '/tmp/target',
       platform: 'gemini-cli',
-      installSkill: true
+      installSkill: true,
+      extraMcps: []
     });
 
     expect(written).toContain('.gemini/settings.json');
@@ -68,7 +71,8 @@ describe('scaffolder index', () => {
     const written = await scaffold({
       targetPath: '/tmp/target',
       platform: 'cursor',
-      installSkill: true
+      installSkill: true,
+      extraMcps: []
     });
 
     expect(written).toContain('.cursor/mcp.json'); // from platformExtras
@@ -87,7 +91,8 @@ describe('scaffolder index', () => {
     const written = await scaffold({
       targetPath: '/tmp/target',
       platform: 'antigravity',
-      installSkill: true
+      installSkill: true,
+      extraMcps: []
     });
 
     expect(written).toContain('.agent/mcp_config.json');
@@ -95,5 +100,24 @@ describe('scaffolder index', () => {
 
     expect(fileWriter.writeFile).toHaveBeenCalledTimes(3);
     expect(fileWriter.writeExtraFile).toHaveBeenCalledTimes(5);
+  });
+
+  it('propagates selected extra MCPs into the scaffolded mcp config', async () => {
+    vi.mocked(fileWriter.writeExtraFile).mockClear();
+
+    await scaffold({
+      targetPath: '/tmp/target',
+      platform: 'claude',
+      installSkill: false,
+      extraMcps: ['shadcn', 'github']
+    });
+
+    const mcpCall = vi.mocked(fileWriter.writeExtraFile).mock.calls.find(
+      ([, extra]) => extra.relPath === '.mcp.json'
+    );
+    expect(mcpCall).toBeDefined();
+    const written = JSON.parse(mcpCall![1].content);
+    expect(Object.keys(written.mcpServers).sort()).toEqual(['context7', 'github', 'shadcn']);
+    expect(written.mcpServers.github.env.GITHUB_PERSONAL_ACCESS_TOKEN).toBe('${GITHUB_PERSONAL_ACCESS_TOKEN}');
   });
 });
