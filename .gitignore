@@ -4,3 +4,4 @@ dist/
 *.d.ts
 *.d.ts.map
 .claude/settings.local.json
+.antigravitycli/

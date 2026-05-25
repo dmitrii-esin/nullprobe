@@ -21,3 +21,29 @@ export interface CommitInfo {
   latestDate: string;
   message: string;
 }
+
+// ---------------------------------------------------------------------------
+// MCP config types
+// ---------------------------------------------------------------------------
+
+export interface McpServerEntry {
+  command: string;
+  args: string[];
+  env?: Record<string, string>;
+}
+
+export interface McpConfig {
+  mcpServers: Record<string, McpServerEntry>;
+}
+
+// ---------------------------------------------------------------------------
+// ExtraFile — a file the scaffolder should produce for a given platform.
+//
+// `ifExists: 'overwrite'`  — always write the full content (default for new files)
+// `ifExists: 'merge-mcp'`  — content is a JSON McpConfig; merge its mcpServers
+//                            into whatever already lives at the path, then write.
+// ---------------------------------------------------------------------------
+
+export type ExtraFile =
+  | { relPath: string; content: string; ifExists: 'overwrite' }
+  | { relPath: string; content: string; ifExists: 'merge-mcp' };

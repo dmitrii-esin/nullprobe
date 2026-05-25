@@ -3,6 +3,7 @@ import chalk from 'chalk';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import type { AIPlatform, InitAnswers } from '../types.js';
+import { PLATFORMS } from '../scaffolder/platforms.js';
 
 export async function runInitFlow(targetPath: string): Promise<InitAnswers> {
   console.log(chalk.bold('\n  nullprobe v0.1\n'));
@@ -74,7 +75,8 @@ export async function runInitFlow(targetPath: string): Promise<InitAnswers> {
   }
 
   const finalPath = path.resolve(targetPath);
-  const existingFiles = await checkExistingFiles(finalPath);
+  const platformConfig = PLATFORMS[platform];
+  const existingFiles = await checkExistingFiles(finalPath, platformConfig.detectPaths);
   if (existingFiles.length > 0) {
     console.log(chalk.yellow(`\n  These files already exist in ${finalPath}:`));
     existingFiles.forEach((f) => console.log(chalk.yellow(`    • ${f}`)));
@@ -91,13 +93,7 @@ export async function runInitFlow(targetPath: string): Promise<InitAnswers> {
   return { platform, targetPath: finalPath, installSkill };
 }
 
-async function checkExistingFiles(base: string): Promise<string[]> {
-  const toCheck = [
-    'AI_FRAMEWORK.md',
-    '.claude/skills/nullprobe-intro/SKILL.md',
-    'wiki/index.md',
-    'wiki/log.md',
-  ];
+async function checkExistingFiles(base: string, toCheck: string[]): Promise<string[]> {
   const existing: string[] = [];
   for (const rel of toCheck) {
     try {

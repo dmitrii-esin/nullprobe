@@ -5,16 +5,16 @@
 
 ## What this project is
 
-nullprobe v0.1 — Deep-void probe that deploys living, self-updating procedural memory, principles, guardrails, and skills before every mission.
+nullprobe v0.2 — Deep-void probe that deploys living, self-updating procedural memory, principles, guardrails, and skills before every mission.
 
 ## Current status
 
 | Area | State |
 |------|-------|
 | `nullprobe init` | Working — scaffolds 4 skills + wiki + AI_FRAMEWORK.md |
-| `nullprobe update` | Partially working — GitHub repo check works; search is a stub |
+| `nullprobe update` | Working — GitHub and Tavily search backends live; results logged to wiki |
 | npm publish | Not published — install from source |
-| Multi-env scaffold | Claude only today; Cursor/Antigravity output planned for v0.2 |
+| Multi-env scaffold | Claude (.claude/skills/), Cursor (.cursor/rules/*.mdc), Antigravity (.antigravitycli/rules/*.md), Gemini CLI (.claude/skills/ fallback) |
 
 ## Key files
 
@@ -33,13 +33,25 @@ nullprobe v0.1 — Deep-void probe that deploys living, self-updating procedural
 - `tsx` for dev, `tsc` for build — no bundler
 - Serial GitHub API calls — unauthenticated, 60 req/hr limit
 
-## v0.2 targets
+## Roadmap
 
-- `nullprobe update --search` — actual internet search for new tools
-- Scaffold Cursor rules (`.cursor/rules/`) and Antigravity config (`.agent/`) based on platform selection
-- npm publish
+See `docs/PLAN.md` for the full development plan with test coverage scope, verification checklist, and multi-registry distribution research.
+
+Current backlog highlights:
+- Test coverage (Vitest, ≥80% branch on core modules) — not started
+- Verification plan — documented in PLAN.md §2, run before each release
+- Language-agnostic distribution: Phase 1 (Bun binary CI), Phase 2 (curl install script), Phase 3 (Homebrew tap, Scoop) — not started
 
 ## Recent changes
+
+### 2026-05-25 — v0.2 shipped (Claude Code session)
+- `src/scaffolder/skill-to-mdc.ts` — SKILL.md → Cursor .mdc transformer (parseSkillMeta, stripSkillFrontmatter, wrapAsMdc)
+- `src/scaffolder/platforms.ts` — platform registry (claude, cursor, gemini-cli, antigravity) with skillPath/detectPaths/extraFiles
+- `src/scaffolder/index.ts` — uses PLATFORMS registry; cursor/antigravity write skills as .mdc/.md via platform.extraFiles()
+- `src/flows/init-flow.ts` — checkExistingFiles is now platform-aware (uses PLATFORMS[platform].detectPaths)
+- `src/search/tavily.ts` — fetch-based Tavily wrapper (no SDK), full error codes
+- `src/flows/update-flow.ts` — real GitHub and Tavily search backends wired; results appended to wiki/log.md
+- Antigravity skill path: `.antigravitycli/rules/` (confirmed — `.windsurf/rules/` was wrong)
 
 ### 2026-05-24 — v0.1 bootstrapped (Claude Code session)
 - Built full CLI: `init` + `update` commands
