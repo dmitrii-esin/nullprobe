@@ -28,6 +28,7 @@ Operational runbooks for recurring tasks live in [`/protocols/`](protocols/READM
 | Verify before release | [`protocols/verification.md`](protocols/verification.md) | `npm run protocol:verify` |
 | Security check | [`protocols/security.md`](protocols/security.md) | `npm run protocol:security` |
 | Clean workspace | [`protocols/cleanup.md`](protocols/cleanup.md) | `npm run protocol:cleanup` |
+| QA audit (multi-perspective) | [`protocols/audit.md`](protocols/audit.md) | `npm run protocol:audit` |
 
 ## Architecture
 

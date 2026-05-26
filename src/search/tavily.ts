@@ -38,6 +38,15 @@ interface TavilyApiResponse {
   results: TavilyApiResult[];
 }
 
+// Reads a fetch Response body with an enforced timeout so a server that returns
+// headers but stalls the body cannot block indefinitely.
+async function readJsonWithTimeout<T>(response: Response, ms: number): Promise<T> {
+  const timeout = new Promise<never>((_, reject) =>
+    setTimeout(() => reject(new TavilyError('NETWORK_ERROR', `Response body timeout after ${ms}ms`, 0)), ms),
+  );
+  return Promise.race([response.json() as Promise<T>, timeout]);
+}
+
 export async function tavilySearch(
   query: string,
   apiKey: string,
@@ -54,7 +63,8 @@ export async function tavilySearch(
       signal: AbortSignal.timeout(10_000),
     });
   } catch (err) {
-    throw new TavilyError('NETWORK_ERROR', `Network error: ${String(err)}`, 0);
+    const reason = err instanceof Error ? err.message : 'unknown';
+    throw new TavilyError('NETWORK_ERROR', `Network error: ${reason}`, 0);
   }
 
   if (!response.ok) {
@@ -62,7 +72,7 @@ export async function tavilySearch(
     throw new TavilyError(code, `HTTP ${response.status}`, response.status);
   }
 
-  const data = (await response.json()) as TavilyApiResponse;
+  const data = await readJsonWithTimeout<TavilyApiResponse>(response, 10_000);
   return data.results.map((r) => ({
     title: r.title,
     url: r.url,

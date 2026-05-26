@@ -6,6 +6,9 @@ describe('platforms', () => {
     const config = PLATFORMS.claude;
     expect(config.skillPath('my-skill')).toBe('.claude/skills/my-skill/SKILL.md');
     expect(config.detectPaths).toContain('.claude/skills/nullprobe-intro/SKILL.md');
+    expect(config.detectPaths).toContain('.mcp.json');
+    expect(config.detectPaths).toContain('AI_FRAMEWORK.md');
+    expect(config.detectPaths).toContain('wiki/log.md');
     expect(config.extraFiles('content', 'name')).toEqual([]);
   });
 
@@ -13,7 +16,9 @@ describe('platforms', () => {
     const config = PLATFORMS.cursor;
     expect(config.skillPath('my-skill')).toBe('.cursor/rules/my-skill.mdc');
     expect(config.detectPaths).toContain('.cursor/rules/nullprobe-intro.mdc');
-    
+    expect(config.detectPaths).toContain('.cursor/mcp.json');
+    expect(config.detectPaths).toContain('AI_FRAMEWORK.md');
+
     const extra = config.extraFiles('---\nname: foo\n---\nbody', 'foo');
     expect(extra).toHaveLength(1);
     expect(extra[0].relPath).toBe('.cursor/rules/foo.mdc');
@@ -22,18 +27,22 @@ describe('platforms', () => {
     expect(extra[0].content).toContain('body');
   });
 
-  it('gemini-cli platform maps to claude paths and returns empty extraFiles', () => {
+  it('gemini-cli platform routes to GEMINI.md (inlined) and .gemini/settings.json', () => {
     const config = PLATFORMS['gemini-cli'];
-    expect(config.skillPath('my-skill')).toBe('.claude/skills/my-skill/SKILL.md');
-    expect(config.detectPaths).toContain('.claude/skills/nullprobe-intro/SKILL.md');
+    expect(config.detectPaths).toContain('GEMINI.md');
+    expect(config.detectPaths).toContain('.gemini/settings.json');
+    expect(config.detectPaths).not.toContain('.claude/skills/nullprobe-intro/SKILL.md');
+    expect(config.detectPaths).toContain('AI_FRAMEWORK.md');
     expect(config.extraFiles('content', 'name')).toEqual([]);
   });
 
-  it('antigravity platform returns correct paths and wraps extraFiles', () => {
+  it('antigravity platform routes to .antigravitycli/rules/ and .agent/mcp_config.json', () => {
     const config = PLATFORMS.antigravity;
     expect(config.skillPath('my-skill')).toBe('.antigravitycli/rules/my-skill.md');
     expect(config.detectPaths).toContain('.antigravitycli/rules/nullprobe-intro.md');
-    
+    expect(config.detectPaths).toContain('.agent/mcp_config.json');
+    expect(config.detectPaths).toContain('AI_FRAMEWORK.md');
+
     const extra = config.extraFiles('---\nname: foo\n---\nbody', 'foo');
     expect(extra).toHaveLength(1);
     expect(extra[0].relPath).toBe('.antigravitycli/rules/foo.md');

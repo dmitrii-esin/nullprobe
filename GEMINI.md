@@ -35,15 +35,16 @@ npm run dev -- init /tmp/test   # Test scaffold output
 
 | Environment | Config | Do not edit from Gemini unless intentional |
 |-------------|--------|---------------------------------------------|
-| Claude Code | `.claude/` | ← leave alone |
-| Cursor | `.cursor/` | ← leave alone |
-| Antigravity / Gemini | `.agent/` | ← this is yours |
+| Claude Code | `.claude/`, `.mcp.json` | ← leave alone |
+| Cursor | `.cursor/`, `.cursor/mcp.json` | ← leave alone |
+| Antigravity / Windsurf | `.antigravitycli/`, `.agent/mcp_config.json` | ← leave alone |
+| Gemini CLI | `GEMINI.md`, `.gemini/settings.json` | ← this is yours |
 
 Shared (read/write from any environment): `src/`, `AI_FRAMEWORK.md`, `wiki/`, `docs/CONTEXT.md`
 
 ## MCP
 
-Config: `.agent/mcp_config.json`
+Config: `.gemini/settings.json`
 - `context7` — live docs for installed dependencies (keep in sync with `.mcp.json` and `.cursor/mcp.json`)
 
 ## Behavioral Guidelines (Karpathy)

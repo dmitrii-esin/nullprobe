@@ -6,15 +6,14 @@ This project supports multiple AI environments in parallel. Each has its own nam
 
 ## Where each tool finds its instructions
 
-| Tool | Primary instructions | Config namespace |
-|------|---------------------|-----------------|
-| Claude Code | `CLAUDE.md` | `.claude/`, `.mcp.json` |
-| Cursor | `AGENTS.md` + `.cursor/rules/*.mdc` | `.cursor/`, `.cursor/mcp.json` |
-| Gemini CLI (Google) | `GEMINI.md` | `.agent/`, `.agent/mcp_config.json` |
-| Antigravity | `.agent/rules/GEMINI.md` | `.agent/`, `.agent/mcp_config.json` |
+| Tool | Primary instructions | MCP / config |
+|------|---------------------|--------------|
+| Claude Code | `CLAUDE.md` + `.claude/skills/*/SKILL.md` | `.mcp.json` |
+| Cursor | `AGENTS.md` + `.cursor/rules/*.mdc` | `.cursor/mcp.json` |
+| Gemini CLI (Google) | `GEMINI.md` (skills inlined as H2 sections) | `.gemini/settings.json` |
+| Antigravity (Windsurf) | `.antigravitycli/rules/*.md` | `.agent/mcp_config.json` |
 | OpenAI Codex CLI | `AGENTS.md` | (no separate namespace) |
 | GitHub Copilot | `.github/copilot-instructions.md` | (no separate namespace) |
-| Windsurf | `.windsurfrules` | (no separate namespace) |
 
 ## Session Start
 
@@ -57,9 +56,10 @@ src/
 ## Namespace Protection
 
 Each AI environment owns its config directory:
-- `.claude/` — Claude Code (skills, settings)
-- `.cursor/` — Cursor (rules, MCP)
-- `.agent/` — Antigravity / Gemini CLI (rules, MCP)
+- `.claude/` — Claude Code (skills, settings, `.mcp.json` at root)
+- `.cursor/` — Cursor (`.cursor/rules/*.mdc`, `.cursor/mcp.json`)
+- `.gemini/` — Gemini CLI (`.gemini/settings.json`); root-level `GEMINI.md` is the instruction file
+- `.antigravitycli/` — Antigravity / Windsurf (rules); `.agent/mcp_config.json` for MCP
 
 Don't edit another environment's namespace unless intentionally updating shared protocols.
 

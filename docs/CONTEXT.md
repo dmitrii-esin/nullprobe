@@ -44,6 +44,21 @@ Current backlog highlights:
 
 ## Recent changes
 
+### 2026-05-26 — Audit Remediation Complete (Antigravity session)
+- Applied and verified all fixes from the 2026-05-25 audit report (tracked in `docs/AUDIT_FIX_HANDOFF.md`).
+- Key fixes include: `npm pack` safety via `prepublishOnly`, correct `.agent`/`.gemini` namespaces documented in `AGENTS.md`, network timeouts enforced in github/tavily clients, prompt-injection sanitized in search flows.
+- Baseline live-confirmed: `tsc --noEmit` exit 0, 98 tests pass, branch coverage **89.02%**.
+
+### 2026-05-25 — Audit protocol added + first multi-lens audit run (Claude Code session)
+- `protocols/audit.md` — new runbook: multi-perspective QA review via specialized subagents (frontend / backend / ML personas + code auditor + reqs-vs-reality + adversarial). Read-only, structured-table output, prioritized remediation grouping.
+- `protocols/prompts/audit-spec.md` — original + polished prompt preserved (matches existing `prompts/` convention).
+- `protocols/README.md`, `CLAUDE.md` — wired Audit row into both protocol tables.
+- `package.json` — added `protocol:audit` script (echo pointer; protocol requires an AI agent to drive subagents).
+- First audit run produced **32 findings**: 1 release-blocker (`npm pack` ships no `dist/` — `bin` would dangle on publish), 8 high-severity (overwrite guard gap on `AI_FRAMEWORK.md`/`wiki/*`, Gemini-CLI skill path contradicts its own comment, 7-location version drift, init-flow's intent capture is a placebo, backend/ML stack-blindness), and 23 medium-to-nit (stale comment block, error-swallowing in github/client, dead `installSkill` field, marketing-vs-reality drift, missing timeouts on a few network calls, prompt-injection vector via search→wiki).
+- Baseline live-confirmed: `tsc --noEmit` exit 0, 47/47 tests pass, branch coverage **88.49%** (CONTEXT previously claimed 89.81% — drift recorded), `npm audit` 0 vulnerabilities.
+- Subagent fanout caveat noted: 4 of 6 parallel subagents bounced with "Credit balance is too low" before producing findings. L4/L5/L6 performed inline; L1 inferred from overlapping L2/L3 evidence. Lesson captured in `wiki/log.md` + `wiki/index.md`.
+- **No code changes made during audit** — report is the deliverable; remediation deferred until owner picks a batch.
+
 ### 2026-05-25 — Dev MCP expansion + optional-MCP customization step (Claude Code session)
 - Dev MCP configs in repo root (`.mcp.json`, `.cursor/mcp.json`, `.agent/mcp_config.json`, new `.gemini/settings.json`) now include `context7`, `shadcn`, `chrome-devtools`, `github` MCPs for contributor sessions — NOT shipped via init by default
 - `src/scaffolder/templates/mcp-context7.ts` refactored — exports `buildMcpConfig(extras)` builder + `EXTRA_MCP_CHOICES` registry; `MCP_CONTEXT7_CONFIG` kept for back-compat

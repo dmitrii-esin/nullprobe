@@ -36,6 +36,9 @@
 - `tsx -e` with top-level await fails because `-e` context is treated as CJS — use a `.ts` file instead
 - The lightweight philosophy must be the first thing anyone reads — it's the core differentiator
 - The project must eat its own dog food: use the same skills it scaffolds for others
+- Subagent fan-out is not all-or-nothing — plan for partial failure; cap at 4-6 lenses and have inline fallback for any lens that must produce output
+- `npm pack --dry-run` belongs in verification, not just security/release — passing tests + build does not guarantee a publishable tarball (cleanup of `dist/` between build and pack ships a broken `bin`)
+- Single source of truth for version: read from `package.json` at runtime, never embed `v0.x` string literals in code/templates/banners
 
 ## Source Repos Tracked
 

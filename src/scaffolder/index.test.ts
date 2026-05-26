@@ -1,99 +1,75 @@
 import { describe, it, expect, vi } from 'vitest';
 import { scaffold } from './index.js';
 import * as fileWriter from './file-writer.js';
+import type { InitAnswers, AIPlatform } from '../types.js';
 
 vi.mock('./file-writer.js', () => ({
   writeFile: vi.fn(),
   writeExtraFile: vi.fn(),
 }));
 
+function answers(platform: AIPlatform, overrides: Partial<InitAnswers> = {}): InitAnswers {
+  return {
+    targetPath: '/tmp/target',
+    platform,
+    approach: 'recommended',
+    details: '',
+    extraMcps: [],
+    ...overrides,
+  };
+}
+
 describe('scaffolder index', () => {
-  it('scaffolds claude without skills', async () => {
+  it('scaffolds claude with skills + MCP', async () => {
     vi.mocked(fileWriter.writeFile).mockClear();
     vi.mocked(fileWriter.writeExtraFile).mockClear();
 
-    const written = await scaffold({
-      targetPath: '/tmp/target',
-      platform: 'claude',
-      installSkill: false,
-      extraMcps: []
-    });
+    const written = await scaffold(answers('claude'));
 
     expect(written).toContain('AI_FRAMEWORK.md');
     expect(written).toContain('wiki/index.md');
     expect(written).toContain('wiki/log.md');
-    expect(written).toContain('.mcp.json');
-
-    expect(fileWriter.writeFile).toHaveBeenCalledTimes(3);
-    expect(fileWriter.writeExtraFile).toHaveBeenCalledTimes(1); // .mcp.json
-  });
-
-  it('scaffolds claude with skills', async () => {
-    vi.mocked(fileWriter.writeFile).mockClear();
-    vi.mocked(fileWriter.writeExtraFile).mockClear();
-
-    const written = await scaffold({
-      targetPath: '/tmp/target',
-      platform: 'claude',
-      installSkill: true,
-      extraMcps: []
-    });
-
     expect(written).toContain('.claude/skills/nullprobe-intro/SKILL.md');
     expect(written).toContain('.mcp.json');
+
     expect(fileWriter.writeFile).toHaveBeenCalledTimes(7); // 3 base + 4 skills
     expect(fileWriter.writeExtraFile).toHaveBeenCalledTimes(1); // .mcp.json
   });
 
-  it('scaffolds gemini-cli with skills', async () => {
+  it('scaffolds gemini-cli with inlined GEMINI.md (no .claude/skills/)', async () => {
     vi.mocked(fileWriter.writeFile).mockClear();
     vi.mocked(fileWriter.writeExtraFile).mockClear();
 
-    const written = await scaffold({
-      targetPath: '/tmp/target',
-      platform: 'gemini-cli',
-      installSkill: true,
-      extraMcps: []
-    });
+    const written = await scaffold(answers('gemini-cli'));
 
+    expect(written).toContain('AI_FRAMEWORK.md');
     expect(written).toContain('.gemini/settings.json');
-    expect(written).toContain('.claude/skills/nullprobe-intro/SKILL.md');
+    expect(written).toContain('GEMINI.md');
+    expect(written).not.toContain('.claude/skills/nullprobe-intro/SKILL.md');
     expect(written).not.toContain('.agent/mcp_config.json');
 
-    expect(fileWriter.writeFile).toHaveBeenCalledTimes(7); // 3 base + 4 skills
-    expect(fileWriter.writeExtraFile).toHaveBeenCalledTimes(1); // .gemini/settings.json
+    expect(fileWriter.writeFile).toHaveBeenCalledTimes(3); // 3 base only
+    expect(fileWriter.writeExtraFile).toHaveBeenCalledTimes(2); // .gemini/settings.json + GEMINI.md
   });
 
-  it('scaffolds cursor with skills', async () => {
+  it('scaffolds cursor with .mdc skills + MCP', async () => {
     vi.mocked(fileWriter.writeFile).mockClear();
     vi.mocked(fileWriter.writeExtraFile).mockClear();
 
-    const written = await scaffold({
-      targetPath: '/tmp/target',
-      platform: 'cursor',
-      installSkill: true,
-      extraMcps: []
-    });
+    const written = await scaffold(answers('cursor'));
 
-    expect(written).toContain('.cursor/mcp.json'); // from platformExtras
-    expect(written).toContain('.cursor/rules/nullprobe-intro.mdc'); // from skillDefs
+    expect(written).toContain('.cursor/mcp.json');
+    expect(written).toContain('.cursor/rules/nullprobe-intro.mdc');
 
-    // 3 base files
-    expect(fileWriter.writeFile).toHaveBeenCalledTimes(3);
-    // 1 mcp json + 4 skills
-    expect(fileWriter.writeExtraFile).toHaveBeenCalledTimes(5);
+    expect(fileWriter.writeFile).toHaveBeenCalledTimes(3);          // 3 base
+    expect(fileWriter.writeExtraFile).toHaveBeenCalledTimes(5);     // mcp + 4 .mdc skills
   });
 
-  it('scaffolds antigravity with skills', async () => {
+  it('scaffolds antigravity with .md rules + MCP', async () => {
     vi.mocked(fileWriter.writeFile).mockClear();
     vi.mocked(fileWriter.writeExtraFile).mockClear();
 
-    const written = await scaffold({
-      targetPath: '/tmp/target',
-      platform: 'antigravity',
-      installSkill: true,
-      extraMcps: []
-    });
+    const written = await scaffold(answers('antigravity'));
 
     expect(written).toContain('.agent/mcp_config.json');
     expect(written).toContain('.antigravitycli/rules/nullprobe-intro.md');
@@ -105,19 +81,28 @@ describe('scaffolder index', () => {
   it('propagates selected extra MCPs into the scaffolded mcp config', async () => {
     vi.mocked(fileWriter.writeExtraFile).mockClear();
 
-    await scaffold({
-      targetPath: '/tmp/target',
-      platform: 'claude',
-      installSkill: false,
-      extraMcps: ['shadcn', 'github']
-    });
+    await scaffold(answers('claude', { extraMcps: ['shadcn', 'github'] }));
 
     const mcpCall = vi.mocked(fileWriter.writeExtraFile).mock.calls.find(
       ([, extra]) => extra.relPath === '.mcp.json'
     );
     expect(mcpCall).toBeDefined();
-    const written = JSON.parse(mcpCall![1].content);
-    expect(Object.keys(written.mcpServers).sort()).toEqual(['context7', 'github', 'shadcn']);
-    expect(written.mcpServers.github.env.GITHUB_PERSONAL_ACCESS_TOKEN).toBe('${GITHUB_PERSONAL_ACCESS_TOKEN}');
+    const writtenConfig = JSON.parse(mcpCall![1].content);
+    expect(Object.keys(writtenConfig.mcpServers).sort()).toEqual(['context7', 'github', 'shadcn']);
+    expect(writtenConfig.mcpServers.github.env.GITHUB_PERSONAL_ACCESS_TOKEN).toBe('${GITHUB_PERSONAL_ACCESS_TOKEN}');
+  });
+
+  it('includes the user details in wiki/log.md when approach is specific', async () => {
+    vi.mocked(fileWriter.writeFile).mockClear();
+
+    await scaffold(answers('claude', { approach: 'specific', details: 'pytest hooks + mypy strict' }));
+
+    const logCall = vi.mocked(fileWriter.writeFile).mock.calls.find(
+      ([, content]) => typeof content === 'string' && content.includes('Wiki Log')
+    );
+    expect(logCall).toBeDefined();
+    const content = logCall![1] as string;
+    expect(content).toContain('User intent (specific): pytest hooks + mypy strict');
+    expect(content).toContain('Approach: specific');
   });
 });

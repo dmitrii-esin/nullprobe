@@ -18,6 +18,7 @@ This directory lives at `/protocols/` in the project root. It is referenced from
 | Verification | [verification.md](verification.md) | `npm run protocol:verify` | Deterministic test + spec cross-check |
 | Security | [security.md](security.md) | `npm run protocol:security` | OWASP scan, secrets, deps, permissions |
 | Cleanup | [cleanup.md](cleanup.md) | `npm run protocol:cleanup` | Remove artifacts, restore clean workspace |
+| Audit | [audit.md](audit.md) | `npm run protocol:audit` | Multi-perspective QA review via specialized subagents |
 
 ## How to Use
 

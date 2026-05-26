@@ -64,7 +64,10 @@ export async function mergeMcpServers(
       throw new SyntaxError('Root value is not an object');
     }
   } catch {
-    // Case 3: invalid / corrupt JSON — overwrite cleanly
+    // Case 3: invalid / corrupt JSON — back up the original BEFORE overwriting
+    // so a hand-edited file with a typo isn't lost forever.
+    const backupPath = `${filePath}.bak-${Date.now()}`;
+    await fs.writeFile(backupPath, raw, 'utf-8');
     await atomicWrite(filePath, dir, JSON.stringify(incoming, null, 2) + '\n');
     return;
   }
