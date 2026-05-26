@@ -12,9 +12,17 @@ export interface SkillMeta {
   allowedTools: string[];
 }
 
+// Frontmatter regexes accept both LF (\n) and CRLF (\r\n) line endings so
+// skills hand-edited on Windows still parse correctly.
+const FRONTMATTER_RE = /^---\r?\n([\s\S]*?)\r?\n---/;
+const FRONTMATTER_STRIP_RE = /^---\r?\n[\s\S]*?\r?\n---\r?\n?/;
+
 export function parseSkillMeta(skillContent: string): SkillMeta {
-  const fmMatch = skillContent.match(/^---\n([\s\S]*?)\n---/);
-  if (!fmMatch) return { name: '', description: '', allowedTools: [] };
+  const fmMatch = skillContent.match(FRONTMATTER_RE);
+  if (!fmMatch) {
+    console.warn('[skill-to-mdc] no frontmatter found in skill; resulting .mdc will have empty description');
+    return { name: '', description: '', allowedTools: [] };
+  }
 
   const fm = fmMatch[1];
 
@@ -32,7 +40,7 @@ export function parseSkillMeta(skillContent: string): SkillMeta {
 }
 
 export function stripSkillFrontmatter(skillContent: string): string {
-  return skillContent.replace(/^---\n[\s\S]*?\n---\n?/, '');
+  return skillContent.replace(FRONTMATTER_STRIP_RE, '');
 }
 
 export function wrapAsMdc(content: string, skillName: string): string {

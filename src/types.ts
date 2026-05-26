@@ -2,10 +2,13 @@ export type AIPlatform = 'claude' | 'cursor' | 'gemini-cli' | 'antigravity';
 
 export type ExtraMcpId = 'shadcn' | 'chrome-devtools' | 'github';
 
+export type InitApproach = 'recommended' | 'specific' | 'search';
+
 export interface InitAnswers {
   platform: AIPlatform;
   targetPath: string;
-  installSkill: boolean;
+  approach: InitApproach;
+  details: string;       // user-typed text when approach === 'specific'; empty otherwise
   extraMcps: ExtraMcpId[];
 }
 

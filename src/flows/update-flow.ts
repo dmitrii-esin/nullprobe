@@ -7,12 +7,37 @@ import { appendToWikiLog } from '../wiki/append.js';
 import { searchGitHub, RateLimitError } from '../search/github.js';
 import { tavilySearch, TavilyError } from '../search/tavily.js';
 
+// Strips ANSI escape sequences, control characters, and defangs javascript:/data:
+// URLs inside markdown links — protects both terminal output and the wiki/log.md
+// from injection content sourced over the network (Tavily / GitHub).
+function sanitize(s: string): string {
+  if (!s) return '';
+  // eslint-disable-next-line no-control-regex
+  let out = s.replace(/\x1b\[[0-9;]*[A-Za-z]/g, '');
+  // eslint-disable-next-line no-control-regex
+  out = out.replace(/[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/g, '');
+  out = out.replace(/\]\(\s*javascript:/gi, '](blocked:');
+  out = out.replace(/\]\(\s*data:/gi, '](blocked:');
+  if (out.length > 280) out = out.slice(0, 277) + '…';
+  return out;
+}
+
 export async function runUpdateFlow(): Promise<void> {
   console.log(chalk.bold('\n  nullprobe update\n'));
 
   const spinner = ora('Checking source repositories...').start();
-  const results = await checkAllSources(SOURCE_REPOS);
-  spinner.succeed('Sources checked.');
+  let results;
+  try {
+    results = await checkAllSources(SOURCE_REPOS);
+    spinner.succeed('Sources checked.');
+  } catch (err) {
+    if (err instanceof RateLimitError) {
+      spinner.fail('GitHub rate limit hit. Wait ~1 minute, or set GITHUB_TOKEN to raise the limit.');
+      return;
+    }
+    spinner.fail('Source check failed.');
+    throw err;
+  }
 
   console.log('');
   const labelWidth = Math.max(...results.map((r) => r.source.label.length)) + 2;
@@ -22,7 +47,7 @@ export async function runUpdateFlow(): Promise<void> {
     if (commit) {
       const date = commit.latestDate.split('T')[0];
       console.log(
-        `  ${chalk.white(label)} ${chalk.dim(commit.latestSha)}  ${chalk.dim(date)}  ${chalk.dim(commit.message)}`
+        `  ${chalk.white(label)} ${chalk.dim(commit.latestSha)}  ${chalk.dim(date)}  ${chalk.dim(sanitize(commit.message))}`
       );
     } else {
       console.log(`  ${chalk.white(label)} ${chalk.red('[unreachable]')}`);
@@ -35,7 +60,6 @@ export async function runUpdateFlow(): Promise<void> {
     message: 'What do you want to do?',
     choices: [
       { name: 'Search for new tools/techniques for my environment', value: 'search' },
-      { name: 'Refresh AI_FRAMEWORK.md with the latest bundled version', value: 'refresh' },
       { name: 'Nothing — just wanted to check', value: 'none' },
     ],
   });
@@ -45,17 +69,8 @@ export async function runUpdateFlow(): Promise<void> {
       message: 'What are you looking for? (e.g. "memory management", "cursor rules", "new plugins")',
     });
 
-    // Ask which search backend to use. Tavily requires an API key; if it is
-    // not set in the environment we dim the option and gate behind a setup
-    // message. The check happens before rendering so the label reflects the
-    // actual state of the user's environment.
     const tavilyReady = Boolean(process.env['TAVILY_API_KEY']);
 
-    // The Tavily choice label is annotated when the key is not present so
-    // users understand upfront why selecting it will not immediately search.
-    // Using a suffix annotation (rather than disabling the choice) keeps the
-    // option visible and discoverable — "needs setup" is more informative
-    // than a grayed-out item with no explanation.
     const tavilyLabel = tavilyReady
       ? 'Tavily (fast, AI-optimized web search)'
       : 'Tavily (fast, AI-optimized web search)  — needs API key, shows setup';
@@ -63,20 +78,12 @@ export async function runUpdateFlow(): Promise<void> {
     const backend = await select({
       message: 'Which search backend?',
       choices: [
-        {
-          name: 'GitHub commits only (no key needed — uses data already shown above)',
-          value: 'github',
-        },
-        {
-          name: tavilyLabel,
-          value: 'tavily',
-        },
+        { name: 'GitHub commits only (no key needed — uses data already shown above)', value: 'github' },
+        { name: tavilyLabel, value: 'tavily' },
       ],
     });
 
     if (backend === 'tavily' && !tavilyReady) {
-      // Tavily is not configured. Print the exact setup sequence — every
-      // token is copy-pasteable and there are no placeholders.
       console.log(
         chalk.yellow('\n  Tavily API key not found in your environment.\n') +
           '\n' +
@@ -89,14 +96,12 @@ export async function runUpdateFlow(): Promise<void> {
           chalk.dim('  3. Reload your shell, then re-run:\n') +
           chalk.white('     nullprobe update\n'),
       );
-      // Record the intent so the AI session can pick up the queued search
-      // once Tavily is configured.
       await appendToWikiLog([
         {
           operation: 'search',
-          title: `Queued Tavily search: "${query}"`,
+          title: `Queued Tavily search: "${sanitize(query)}"`,
           lines: [
-            `Query: ${query}`,
+            `Query: ${sanitize(query)}`,
             `Backend: tavily — not yet configured`,
             `Blocked by: TAVILY_API_KEY not set`,
             `Next: set TAVILY_API_KEY then run: nullprobe update`,
@@ -108,24 +113,24 @@ export async function runUpdateFlow(): Promise<void> {
 
     if (backend === 'tavily' && tavilyReady) {
       const apiKey = process.env['TAVILY_API_KEY']!;
-      const tavilySpinner = ora(`Searching Tavily for "${query}"...`).start();
+      const tavilySpinner = ora(`Searching Tavily for "${sanitize(query)}"...`).start();
       try {
         const results = await tavilySearch(query, apiKey);
         tavilySpinner.succeed(`Found ${results.length} results.`);
         for (const r of results.slice(0, 5)) {
           console.log(
-            `\n  ${chalk.white(r.title)}\n  ${chalk.dim(r.url)}\n  ${chalk.dim(r.content.slice(0, 120))}...`,
+            `\n  ${chalk.white(sanitize(r.title))}\n  ${chalk.dim(sanitize(r.url))}\n  ${chalk.dim(sanitize(r.content))}...`,
           );
         }
         await appendToWikiLog([
           {
             operation: 'search',
-            title: `Tavily search: "${query}"`,
+            title: `Tavily search: "${sanitize(query)}"`,
             lines: [
-              `Query: ${query}`,
+              `Query: ${sanitize(query)}`,
               `Backend: tavily`,
               `Results: ${results.length}`,
-              ...results.slice(0, 5).map((r) => `- ${r.title} — ${r.url}`),
+              ...results.slice(0, 5).map((r) => `- ${sanitize(r.title)} — ${sanitize(r.url)}`),
             ],
           },
         ]);
@@ -137,23 +142,22 @@ export async function runUpdateFlow(): Promise<void> {
         }
       }
     } else {
-      // backend === 'github'
-      const ghSpinner = ora(`Searching GitHub for "${query}"...`).start();
+      const ghSpinner = ora(`Searching GitHub for "${sanitize(query)}"...`).start();
       try {
         const ghResults = await searchGitHub(query);
         ghSpinner.succeed(`Found ${ghResults.length} results.`);
         for (const r of ghResults.slice(0, 5)) {
-          console.log(`\n  ${chalk.white(r.title)}\n  ${chalk.dim(r.url)}`);
+          console.log(`\n  ${chalk.white(sanitize(r.title))}\n  ${chalk.dim(sanitize(r.url))}`);
         }
         await appendToWikiLog([
           {
             operation: 'search',
-            title: `GitHub search: "${query}"`,
+            title: `GitHub search: "${sanitize(query)}"`,
             lines: [
-              `Query: ${query}`,
+              `Query: ${sanitize(query)}`,
               `Backend: github`,
               `Results: ${ghResults.length}`,
-              ...ghResults.slice(0, 5).map((r) => `- ${r.title} — ${r.url}`),
+              ...ghResults.slice(0, 5).map((r) => `- ${sanitize(r.title)} — ${sanitize(r.url)}`),
             ],
           },
         ]);
@@ -165,12 +169,6 @@ export async function runUpdateFlow(): Promise<void> {
         }
       }
     }
-  } else if (action === 'refresh') {
-    console.log(
-      chalk.dim(
-        '\n  Refresh will overwrite AI_FRAMEWORK.md with the version bundled in this CLI.\n  Run: nullprobe init --refresh (coming in v0.2)\n'
-      )
-    );
   } else {
     console.log(chalk.dim('\n  All good. Run "nullprobe update" any time.\n'));
   }

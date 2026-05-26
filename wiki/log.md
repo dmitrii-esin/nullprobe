@@ -113,3 +113,71 @@
   OWASP cross-check | PASS | A01/A03/A05/A06/A09 covered; A02/A07/A10 not applicable
 
 ---
+
+## [2026-05-25] audit | New audit protocol implemented + first run
+
+  Added /protocols/audit.md — multi-perspective QA review runbook that spawns specialized
+  subagents (frontend / backend / ML personas + code auditor + reqs-vs-reality + adversarial)
+  and aggregates findings into a structured table. Wired into protocols/README.md, CLAUDE.md
+  table, and `npm run protocol:audit`. Original + polished prompts preserved at
+  protocols/prompts/audit-spec.md.
+
+  First-run results (32 findings, sorted by severity):
+  - 1 RELEASE-BLOCKER (AUD-001): npm pack ships 4 files, NO dist/. `npm publish` from
+    current HEAD would push a broken package — `bin: ./dist/index.js` is a dangling pointer.
+    No prepublishOnly script. Need: `"prepublishOnly": "npm run build"`.
+  - 8 HIGH-severity: overwrite guard misses AI_FRAMEWORK.md + wiki/* (silent clobber on
+    re-init); gemini-cli scaffolds skills to .claude/skills/ despite the maintainer's own
+    comment forbidding it; version drift across 7 locations (banner v0.1, package.json
+    0.1.0, CONTEXT v0.2); init-flow discards user's typed intent (placebo prompt);
+    backend/ML personas get zero stack-relevant content; post-scaffold next-step messages
+    reference wrong paths for 3 of 4 platforms.
+  - 12 MEDIUM: stale 38-line comment block in scaffolder/index.ts; github/client.ts
+    swallows all errors as null; mergeMcpServers overwrites corrupt JSON without backup;
+    refresh-stub says "coming in v0.2" but we ARE v0.2; installSkill field is dead code;
+    marketing oversells ("scaffold any type of software project" vs delivered AI-meta).
+  - 8 LOW + 3 NIT: prompt-injection vector via search→wiki path, missing timeouts on
+    octokit.listCommits + tavily response.json, tsconfig moduleResolution "bundler" wrong
+    for direct Node ESM execution.
+
+  Baseline confirmed clean: `tsc --noEmit` exit 0; 47/47 tests pass; branch coverage 88.49%
+  (slight drift from CONTEXT's 89.81% claim); npm audit 0 vulnerabilities.
+
+  Subagent fanout caveat: 4 of 6 parallel agents bounced with "Credit balance is too low"
+  before producing findings (L1 frontend, L4 code auditor, L5 reqs-vs-reality, L6 security).
+  Performed L4/L5/L6 inline; L1 inferred from overlapping L2/L3 evidence. Lesson: when
+  fanning out across many subagents, expect partial failures and have a fallback path.
+
+---
+
+## [2026-05-25] lesson | Subagent fan-out is not all-or-nothing — plan for partial failure
+
+  Spawning N parallel subagents via the Agent tool does not guarantee N results. Subagents
+  can bounce for orthogonal reasons (rate limits, credit balance, transient model errors).
+  When fanning out for a multi-perspective task: (a) make each lens independently valuable
+  so partial coverage still produces a useful report, (b) be prepared to perform missing
+  lenses inline if they're critical, (c) cap subagent count at ~4-6 max — beyond that, the
+  failure probability compounds and the synthesis burden outweighs the parallelism win.
+
+---
+
+## [2026-05-25] lesson | Run `npm pack --dry-run` before declaring a release ready
+
+  The verification protocol passed (tests + build + e2e). The audit protocol caught a
+  release-blocker the verification protocol cannot catch: when `dist/` was cleaned, the
+  package became un-publishable but every other check still goes green. Distribution
+  surface (`npm pack`) must be a first-class verification step, not an afterthought.
+  Action item: add `npm pack --dry-run | grep -q dist/` as a step in protocol:verify, OR
+  add `prepublishOnly: npm run build` so the publish step self-heals.
+
+---
+
+## [2026-05-26] fix | Audit remediation complete
+
+  Applied all planned fixes from the 2026-05-25 audit report:
+  - Surface fixes: tsconfig moduleResolution updated, file-writer JSON backup logic added, octokit and tavily timeouts enforced.
+  - Deep fixes: package.json prepublishOnly script added to prevent empty publish, docs synchronized with code realities.
+  - Tests verified: npx tsc --noEmit && npm test pass clean. Branch coverage maintained at 89.02%.
+  All findings from AUDIT_FIX_HANDOFF.md marked as DONE.
+
+---

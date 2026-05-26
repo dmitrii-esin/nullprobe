@@ -1,7 +1,12 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { parseSkillMeta, stripSkillFrontmatter, wrapAsMdc } from './skill-to-mdc.js';
 
 describe('skill-to-mdc', () => {
+  beforeEach(() => {
+    // Silence the "no frontmatter found" warning emitted on invalid input.
+    vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+  });
+
   const sampleSkill = `---
 name: my-skill
 description: A cool skill
@@ -9,6 +14,9 @@ allowed-tools: read_file, run_command
 ---
 # Skill Content
 This is the body.`;
+
+  const sampleSkillCrlf =
+    '---\r\nname: crlf-skill\r\ndescription: Saved on Windows\r\nallowed-tools: read_file\r\n---\r\n# Body\r\nLine.';
 
   const invalidSkill = `No frontmatter here`;
 
@@ -19,6 +27,19 @@ This is the body.`;
       description: 'A cool skill',
       allowedTools: ['read_file', 'run_command'],
     });
+  });
+
+  it('parseSkillMeta parses CRLF-terminated frontmatter correctly', () => {
+    const meta = parseSkillMeta(sampleSkillCrlf);
+    expect(meta.name).toBe('crlf-skill');
+    expect(meta.description).toBe('Saved on Windows');
+    expect(meta.allowedTools).toEqual(['read_file']);
+  });
+
+  it('stripSkillFrontmatter handles CRLF', () => {
+    const body = stripSkillFrontmatter(sampleSkillCrlf);
+    expect(body).toContain('# Body');
+    expect(body).not.toContain('---');
   });
 
   it('parseSkillMeta returns empty strings and array for missing frontmatter', () => {

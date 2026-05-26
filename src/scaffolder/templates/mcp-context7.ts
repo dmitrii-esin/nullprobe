@@ -31,7 +31,7 @@ export const EXTRA_MCP_CHOICES: Array<{ id: ExtraMcpId; label: string; descripti
   { id: 'github', label: 'github', description: 'GitHub MCP — repo/issue/PR access (needs GITHUB_PERSONAL_ACCESS_TOKEN)' },
 ];
 
-export function buildMcpConfig(extras: ExtraMcpId[] = []): string {
+export function buildMcpConfig(extras: ExtraMcpId[]): string {
   const servers: Record<string, McpServerEntry> = { context7: CONTEXT7 };
   for (const id of extras) {
     const entry = EXTRA_MCP_REGISTRY[id];
@@ -40,7 +40,3 @@ export function buildMcpConfig(extras: ExtraMcpId[] = []): string {
   const config: McpConfig = { mcpServers: servers };
   return JSON.stringify(config, null, 2) + '\n';
 }
-
-// Back-compat: default context7-only string for callers that don't yet
-// thread `extras` through. Use buildMcpConfig() for new code.
-export const MCP_CONTEXT7_CONFIG: string = buildMcpConfig();

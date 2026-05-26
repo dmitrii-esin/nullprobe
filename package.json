@@ -1,6 +1,6 @@
 {
   "name": "nullprobe",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Deep-void probe that deploys living, self-updating procedural memory, principles, guardrails, and skills before every mission.",
   "type": "module",
   "bin": {
@@ -15,11 +15,13 @@
     "build": "tsc && chmod +x dist/index.js",
     "dev": "tsx src/index.ts",
     "test": "vitest run --coverage",
+    "prepublishOnly": "npm run build && node -e \"const fs=require('fs');if(!fs.existsSync('dist/index.js')){console.error('dist/index.js missing — refusing to publish');process.exit(1)}\"",
     "protocol:verify": "rm -rf dist && npm run build && npm test",
     "protocol:security": "npm audit && grep -rn -e 'api[_-]key\\s*=' -e 'secret\\s*=' -e 'password\\s*=' -e 'token\\s*=' --include='*.ts' --include='*.js' --include='*.json' --exclude-dir=node_modules --exclude-dir=dist --exclude-dir=.git . || true && npm pack --dry-run",
     "protocol:cleanup": "rm -rf dist coverage tsconfig.tsbuildinfo *.tgz /tmp/test-probe /tmp/test-cursor /tmp/test-antigravity /tmp/test-gemini && find . -name '.DS_Store' -not -path '*/.git/*' -delete && echo 'Cleanup complete.'",
     "protocol:cleanup:dry": "echo '=== DRY RUN ===' && echo 'dist/:' && ls dist/ 2>/dev/null && echo 'coverage/:' && ls coverage/ 2>/dev/null && echo '*.tgz:' && ls *.tgz 2>/dev/null && find . -name '.DS_Store' -not -path '*/.git/*' && echo '(dry run — nothing deleted)' || true",
-    "protocol:explore": "echo 'Run protocols/exploration.md manually — web search steps require human or AI execution. See: npm run dev -- update'"
+    "protocol:explore": "echo 'Run protocols/exploration.md manually — web search steps require human or AI execution. See: npm run dev -- update'",
+    "protocol:audit": "echo 'Run protocols/audit.md — multi-perspective QA audit requires an AI agent to spawn specialized subagents. No deterministic shell equivalent.'"
   },
   "engines": {
     "node": ">=18.0.0"

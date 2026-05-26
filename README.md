@@ -1,6 +1,8 @@
 # nullprobe
 
-Deep-void probe that deploys living, self-updating procedural memory, principles, guardrails, and skills before every mission.
+A lightweight AI collaboration layer for your project. Deploys procedural memory, behavioral principles, and a living wiki so your AI session compounds knowledge instead of starting from zero every time.
+
+> **Scope:** nullprobe ships generic AI-process skills (think-before-coding, simplicity-guard, session-crystallize, orientation). It does **not** ship stack-specific packs for frontend / backend / ML today — those are tracked for v0.3. If you need stack-aware skills now, layer them on top of what nullprobe scaffolds.
 
 Instead of overloading you with multi-framework, multi-repo, multi-tool fragile setups, nullprobe asks two questions and gets out of the way:
 
@@ -64,25 +66,28 @@ The AI tooling space is drowning in complexity. nullprobe exists because:
 
 ## Multi-environment support
 
-nullprobe itself is set up for Claude Code, Cursor, and Antigravity/Gemini CLI in parallel:
+`nullprobe init` scaffolds for any of these AI environments:
 
-| Environment | Config | Rules |
-|-------------|--------|-------|
-| Claude Code | `.claude/`, `.mcp.json` | `CLAUDE.md` |
-| Cursor | `.cursor/`, `.cursor/mcp.json` | `.cursor/rules/*.mdc` |
-| Antigravity / Gemini CLI | `.agent/`, `.agent/mcp_config.json` | `.agent/rules/GEMINI.md` |
+| Environment | MCP config | Skills / rules path |
+|-------------|------------|---------------------|
+| Claude Code | `.mcp.json` | `.claude/skills/<name>/SKILL.md` |
+| Cursor | `.cursor/mcp.json` | `.cursor/rules/<name>.mdc` |
+| Gemini CLI | `.gemini/settings.json` | `GEMINI.md` (skills inlined as H2 sections — Gemini's current preview has no multi-file skill loader) |
+| Antigravity (Windsurf) | `.agent/mcp_config.json` | `.antigravitycli/rules/<name>.md` |
 
-Context7 MCP is configured across all three for live documentation lookup.
+Context7 MCP ships by default in every environment for live library documentation. Use the "specific" path during `init` to opt into additional MCPs (shadcn, chrome-devtools, github).
 
-## Status (v0.1)
+## Status (v0.2)
 
 | Feature | Status |
 |---------|--------|
-| `nullprobe init` — scaffold 4 skills + wiki | Working |
+| `nullprobe init` — scaffold AI collaboration layer (4 skills + wiki) | Working |
 | `nullprobe update` — check source repos for commits | Working |
-| `nullprobe update` — search internet for new tools | Planned (v0.2) |
+| `nullprobe update` — search internet (GitHub + Tavily) for new tools | Working |
+| Multi-environment scaffold (Claude / Cursor / Antigravity / Gemini CLI) | Working |
+| Gemini CLI: skills inlined into generated `GEMINI.md` (no multi-file loader yet) | Working |
+| Stack-specific skill packs (frontend / backend / ML) | Not yet — `nullprobe` ships generic AI-collaboration skills today; stack-aware packs are tracked for v0.3 |
 | npm publish | Not yet — install from source for now |
-| Cursor/Antigravity-specific scaffold output | Planned (v0.2) |
 
 ## Development
 

@@ -25,11 +25,21 @@ describe('file-writer', () => {
     expect(result.mcpServers).toHaveProperty('newServer');
   });
 
-  it('Case 3: File exists, invalid JSON -> overwrites with newContent', async () => {
-    await fs.writeFile(filePath, 'invalid{json');
+  it('Case 3: File exists, invalid JSON -> backs up the original then overwrites', async () => {
+    const corrupt = 'invalid{json';
+    await fs.writeFile(filePath, corrupt);
     await mergeMcpServers(filePath, newContent);
+
+    // New content is in place
     const result = JSON.parse(await fs.readFile(filePath, 'utf-8'));
     expect(result.mcpServers).toHaveProperty('newServer');
+
+    // A backup file containing the original corrupt content also exists
+    const files = await fs.readdir(tmpDir);
+    const backup = files.find((f) => f.startsWith('mcp.json.bak-'));
+    expect(backup).toBeDefined();
+    const backupContent = await fs.readFile(path.join(tmpDir, backup!), 'utf-8');
+    expect(backupContent).toBe(corrupt);
   });
 
   it('Case 4: File exists, valid JSON, no mcpServers key -> injects mcpServers block', async () => {
