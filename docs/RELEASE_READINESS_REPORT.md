@@ -3,6 +3,9 @@
 **Date:** May 2026  
 **Status:** Preparation Complete — Ready for Final Review & Execution
 
+> **For any future agent or contributor:**  
+> Start here. This document + the linked release options describe the current state and next steps. Do not start new distribution work without reading this first.
+
 ---
 
 ## Summary of Work Completed

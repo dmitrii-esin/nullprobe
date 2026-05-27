@@ -304,7 +304,7 @@ Run on at least two different platforms (e.g. Claude + Cursor) to confirm platfo
 - [ ] Decide + implement whether generalized protocols should be refreshable via `nullprobe update` command (deferred)
 
 **Research Notes**
-- See the detailed best-practice research and examples (SeleniumBase markdown case plans, ISTQB-aligned templates, pen-test finding formats, ISO 29119-3) captured in the conversation leading to this item.
+- **Important:** For the current release preparation status, see [docs/RELEASE_READINESS_REPORT.md](./RELEASE_READINESS_REPORT.md). This is the canonical document that any future agent should read first when asking "what is the next step?".
 - Strong inspiration possible from how the current audit table and verification steps already work well when made deterministic and table-driven.
 
 ### 4a. Related Future Research: AI Tools & Memory Systems Analysis
@@ -397,7 +397,7 @@ This research is particularly relevant because nullprobe's core offering is *dep
 
 ## 3. Language-Agnostic Distribution
 
-**Status:** Research complete — implementation not started
+**Status:** Research complete. Significant preparation work done for 1.0.0 (see RELEASE_READINESS_REPORT.md). Implementation of release infrastructure is in progress but publishing has not occurred.
 
 **Goal:** Users without Node.js installed should be able to install nullprobe. The npm channel remains primary; everything below adds reach.
 

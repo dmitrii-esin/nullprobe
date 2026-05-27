@@ -45,6 +45,18 @@ Current backlog highlights:
 
 ## Recent changes
 
+### 2026-05-27 — 1.0.0 Release Preparation Complete (Pushed, Not Published)
+- All preparation work for v1.0.0 multi-platform release committed and pushed to `master`.
+- Key artifacts:
+  - `docs/RELEASE_READINESS_REPORT.md` — **Canonical status document**. Any future agent should start here.
+  - `docs/RELEASE_1.0_PLAN.md` — High-level 1.0.0 plan
+  - `docs/release/` — Three release automation options (Manual, GitHub Actions, GoReleaser)
+  - `.github/workflows/release.yml` — Basic release workflow
+  - `install.ps1` + improved `install.sh`
+- **Important:** No publishing has occurred. All changes are preparation only.
+- Next step: User will review, provide GitHub token + other details, then we execute the first publish together.
+- Full details and remaining items: See `docs/RELEASE_READINESS_REPORT.md`
+
 ### 2026-05-27 — Comprehensive multi-registry publishing research + master pre-publish checklist
 - Delivered detailed investigation into current (2025–2026) industry-standard ways to publish CLI tools across npm, Homebrew, Scoop, Winget, standalone binaries via `bun build --compile`, curl/wget one-liners, apt/deb, pip/PyPI, JSR, and version managers.
 - Created single authoritative orchestration artifact: [docs/PRE_PUBLISH_CHECKLIST.md](./PRE_PUBLISH_CHECKLIST.md) — 10 phases with explicit gates, integrates existing `protocols/security.md` + `protocols/verification.md`, covers safety, supply chain, README clarity, packaging hygiene, binary distribution, automation, and post-publish monitoring.

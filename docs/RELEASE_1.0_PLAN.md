@@ -86,3 +86,6 @@ This document is the planning artifact. Actual execution will happen in a contro
 ---
 
 **Status:** Prepared as part of the 1.0.0 readiness work (May 2026). Not yet executed.
+
+**For the latest detailed status and remaining action items, always refer to:**
+[docs/RELEASE_READINESS_REPORT.md](./RELEASE_READINESS_REPORT.md)

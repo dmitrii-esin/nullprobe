@@ -11,6 +11,23 @@ Instead of overloading you with multi-framework, multi-repo, multi-tool fragile 
 
 That's it. Under 30 seconds. Your project gets a compounding knowledge layer that evolves with every session.
 
+## Current Status (May 2026)
+
+**nullprobe is in active preparation for v1.0.0** — its first stable, multi-platform release.
+
+**Do not publish yet.** All distribution work is in preparation phase only.
+
+**Canonical status document:** [docs/RELEASE_READINESS_REPORT.md](docs/RELEASE_READINESS_REPORT.md)
+
+This document describes:
+- What has been prepared
+- The three available release automation options (Manual / GitHub Actions / GoReleaser)
+- Exactly what is still needed before the first publish
+
+See also:
+- [docs/RELEASE_1.0_PLAN.md](docs/RELEASE_1.0_PLAN.md) — High-level 1.0.0 release plan
+- [docs/PLAN.md](docs/PLAN.md) §3 — Language-agnostic distribution strategy
+
 ## Install
 
 **nullprobe is in active preparation for broad distribution.** The easiest path today is installing from source (requires Node.js ≥ 18). Standalone binaries + one-line installer, npm package, Homebrew, and Scoop are in preparation and will be the recommended methods soon.
