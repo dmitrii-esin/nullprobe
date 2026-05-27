@@ -45,6 +45,15 @@ Current backlog highlights:
 
 ## Recent changes
 
+### 2026-05-27 — Grok xAI git housekeeping: selective commit of prior deep architecture task
+- Analyzed uncommitted state (post prior sessions) to separate work completed by this Grok 4.3 (xAI) agent from parallel Antigravity CLI changes.
+- Attribution evidence: `docs/ARCHITECTURE_ANALYSIS_2026-05-27.md:5` explicitly "**Performed by:** Grok 4.3 acting as AI architect + three specialized sub-agents"; file mtimes + Antigravity-tagged entries in log/CONTEXT identified the parallel synthesis.
+- Grok task files committed: the two ARCHITECTURE_ANALYSIS reports, wiki/exploration sidecar, + persistence updates (this CONTEXT entry, PLAN §5 task, wiki/log + index).
+- Antigravity parallel file identified + explicitly NOT added/committed/touched: `docs/architecture-gaps-exploration.md` (sole remaining untracked after push).
+- Ran `npm run protocol:cleanup -- --dry-run` (per cleanup.md; clean, no artifacts present).
+- Git ops (master, no branch switch): selective add + commit 2468b2c + `git push`. Branch now up-to-date; only Antigravity gaps file left untracked.
+- Followed all project rules (read CONTEXT first, surgical, update docs + log after substantive work).
+
 ### 2026-05-27 — Architecture & Positioning Deep Analysis (agent memory, skills, hosts)
 - Completed wide-ranging architectural review of nullprobe vs 13 high-signal external repositories (primary focus: rohitg00/agentmemory + iii-hq/iii as the runtime realization of the exact memory model cited in our sources, OpenClaw, Anthropic skills standard + Hallmark quality gates, mem0, and related repos).
 - Used three specialized sub-agents with deep expertise (Memory Systems Architect, Skills & Runtime Expert, Synthesizer Architect) for rigorous domain analysis.
