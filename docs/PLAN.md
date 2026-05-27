@@ -443,6 +443,8 @@ This requires adding Bun as a build dependency (dev-only). No runtime changes to
 - The musl Linux target (`bun-linux-x64-musl`) is required for Alpine-based containers and some CI runners.
 - The `install.sh` script is the single highest-leverage deliverable: one command, zero runtime dependencies, works on any POSIX shell.
 
+**2026 Update:** During pre-release preparation we evaluated universal orchestration tools. **GoReleaser v2** (with new Node SEA builder support) is the recommended engine to eventually drive binaries + Homebrew + Scoop + GitHub Releases from a single tag. See the companion document `docs/RELEASE_ORCHESTRATION_EVALUATION.md` for the full rationale and comparison with JReleaser. The phased plan above remains valid; GoReleaser is the implementation vehicle for Phases 1–3.
+
 ---
 
 ## 5. Architecture & Positioning Review (2026-05-27 Analysis)

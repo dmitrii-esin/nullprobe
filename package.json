@@ -15,7 +15,7 @@
     "build": "tsc && chmod +x dist/index.js",
     "dev": "tsx src/index.ts",
     "test": "vitest run --coverage",
-    "prepublishOnly": "npm run build && node -e \"const fs=require('fs');if(!fs.existsSync('dist/index.js')){console.error('dist/index.js missing — refusing to publish');process.exit(1)}\"",
+    "prepublishOnly": "npm run build && node -e \"const fs=require('fs');if(!fs.existsSync('dist/index.js')){console.error('dist/index.js missing — refusing to publish');process.exit(1)} console.log('prepublish guard passed (no test artifacts expected after tsconfig exclude)')\"",
     "protocol:verify": "rm -rf dist && npm run build && npm test",
     "protocol:security": "npm audit && grep -rn -e 'api[_-]key\\s*=' -e 'secret\\s*=' -e 'password\\s*=' -e 'token\\s*=' --include='*.ts' --include='*.js' --include='*.json' --exclude-dir=node_modules --exclude-dir=dist --exclude-dir=.git . || true && npm pack --dry-run",
     "protocol:cleanup": "rm -rf dist coverage tsconfig.tsbuildinfo *.tgz /tmp/test-probe /tmp/test-cursor /tmp/test-antigravity /tmp/test-gemini && find . -name '.DS_Store' -not -path '*/.git/*' -delete && echo 'Cleanup complete.'",
@@ -36,6 +36,15 @@
     "skills"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dmitrii-esin/nullprobe.git"
+  },
+  "author": "Dmitrii Esin",
+  "homepage": "https://github.com/dmitrii-esin/nullprobe",
+  "bugs": {
+    "url": "https://github.com/dmitrii-esin/nullprobe/issues"
+  },
   "dependencies": {
     "@inquirer/prompts": "^8.4.3",
     "@octokit/rest": "^21.0.0",

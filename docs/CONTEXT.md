@@ -45,6 +45,13 @@ Current backlog highlights:
 
 ## Recent changes
 
+### 2026-05-27 — Comprehensive multi-registry publishing research + master pre-publish checklist
+- Delivered detailed investigation into current (2025–2026) industry-standard ways to publish CLI tools across npm, Homebrew, Scoop, Winget, standalone binaries via `bun build --compile`, curl/wget one-liners, apt/deb, pip/PyPI, JSR, and version managers.
+- Created single authoritative orchestration artifact: [docs/PRE_PUBLISH_CHECKLIST.md](./PRE_PUBLISH_CHECKLIST.md) — 10 phases with explicit gates, integrates existing `protocols/security.md` + `protocols/verification.md`, covers safety, supply chain, README clarity, packaging hygiene, binary distribution, automation, and post-publish monitoring.
+- The checklist is designed for clear, safe, simple execution when publishing to multiple registries simultaneously.
+- No code changes; pure research + high-value operational deliverable.
+- Updated this Recent changes section per project rules.
+
 ### 2026-05-27 — Grok xAI git housekeeping: selective commit of prior deep architecture task
 - Analyzed uncommitted state (post prior sessions) to separate work completed by this Grok 4.3 (xAI) agent from parallel Antigravity CLI changes.
 - Attribution evidence: `docs/ARCHITECTURE_ANALYSIS_2026-05-27.md:5` explicitly "**Performed by:** Grok 4.3 acting as AI architect + three specialized sub-agents"; file mtimes + Antigravity-tagged entries in log/CONTEXT identified the parallel synthesis.

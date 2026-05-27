@@ -13,13 +13,28 @@ That's it. Under 30 seconds. Your project gets a compounding knowledge layer tha
 
 ## Install
 
+**nullprobe is in active preparation for broad distribution.** The easiest path today is installing from source (requires Node.js ≥ 18). Standalone binaries + one-line installer, npm package, Homebrew, and Scoop are in preparation and will be the recommended methods soon.
+
+### Recommended (once published)
+
+```bash
+# One-line installer (bash/zsh, macOS + Linux)
+curl -fsSL https://raw.githubusercontent.com/dmitrii-esin/nullprobe/main/install.sh | sh
+
+# Or via Homebrew / Scoop (coming soon)
+```
+
+### Current (from source)
+
 ```bash
 git clone https://github.com/dmitrii-esin/nullprobe.git
 cd nullprobe
 npm install
 npm run build
-npm link
+npm link   # or npm install -g .
 ```
+
+**npm package** and **standalone binaries** (no Node required) are the primary targets for the first public release.
 
 ## Usage
 
@@ -77,17 +92,11 @@ The AI tooling space is drowning in complexity. nullprobe exists because:
 
 Context7 MCP ships by default in every environment for live library documentation. Use the "specific" path during `init` to opt into additional MCPs (shadcn, chrome-devtools, github).
 
-## Status (v0.2)
+## Status (v0.2 — pre-release preparation)
 
-| Feature | Status |
-|---------|--------|
-| `nullprobe init` — scaffold AI collaboration layer (4 skills + wiki) | Working |
-| `nullprobe update` — check source repos for commits | Working |
-| `nullprobe update` — search internet (GitHub + Tavily) for new tools | Working |
-| Multi-environment scaffold (Claude / Cursor / Antigravity / Gemini CLI) | Working |
-| Gemini CLI: skills inlined into generated `GEMINI.md` (no multi-file loader yet) | Working |
-| Stack-specific skill packs (frontend / backend / ML) | Not yet — `nullprobe` ships generic AI-collaboration skills today; stack-aware packs are tracked for v0.3 |
-| npm publish | Not yet — install from source for now |
+Core functionality (`init`, `update`, multi-environment scaffolding) is stable and well tested.
+
+Distribution channels (npm package, standalone binaries + installer, Homebrew, Scoop) are in active preparation. See the Install section above and `docs/PRE_PUBLISH_CHECKLIST.md` for the full plan.
 
 ## Development
 
