@@ -314,8 +314,6 @@ Run on at least two different platforms (e.g. Claude + Cursor) to confirm platfo
 - [EXPLORATION_REPORT.md](./EXPLORATION_REPORT.md) — Initial short synthesis table (Antigravity / parallel session)
 - [exploration-2026-05-27-mandated-sources.md](./exploration-2026-05-27-mandated-sources.md) — Deep v3 protocol execution with structured Step 4 findings, query trace, and concrete integration proposals
 
-
-
 →**Goal:** Study advanced multi-agent architectures and modern AI agent memory systems as input for both:
 - Improving nullprobe's own internal protocols, wiki memory model, and update mechanisms.
 - Informing the design of generalized, user-shippable protocols (especially how verification/audit protocols could themselves incorporate better memory, cross-finding synthesis, quality gates, and institutional learning patterns).
