@@ -350,8 +350,10 @@ This research is particularly relevant because nullprobe's core offering is *dep
 
 | Document | Location | Contents |
 |----------|----------|----------|
-| Full analysis report | [docs/ARCHITECTURE_ANALYSIS.md](./ARCHITECTURE_ANALYSIS.md) | 9 gap findings, competitive matrix, 5 core questions answered, strategic paths |
-| Technical sidecar | [wiki/exploration/2026-05-27-architecture-analysis.md](../wiki/exploration/2026-05-27-architecture-analysis.md) | Raw reference data: agent rosters, MCP protocols, benchmarks, tool surfaces |
+| Full analysis report (Claude) | [docs/ARCHITECTURE_ANALYSIS.md](./ARCHITECTURE_ANALYSIS.md) | 9 gap findings, competitive matrix, 5 core questions answered, strategic paths |
+| Technical sidecar (Claude) | [wiki/exploration/2026-05-27-architecture-analysis.md](../wiki/exploration/2026-05-27-architecture-analysis.md) | Raw reference data: agent rosters, MCP protocols, benchmarks, tool surfaces |
+| Consolidated synthesis (Grok xAI) | [docs/ARCHITECTURE_ANALYSIS_2026-05-27.md](./ARCHITECTURE_ANALYSIS_2026-05-27.md) | 5 core Qs, 7 high-impact questions, gaps table, recommendations |
+| Gaps & Proposed Solutions (Antigravity CLI) | [docs/architecture-gaps-exploration.md](./architecture-gaps-exploration.md) | Parallel exploration/gaps synthesis report |
 | Wiki index | [wiki/index.md](../wiki/index.md) | Updated with all new repos + architecture analysis section |
 | Wiki log | [wiki/log.md](../wiki/log.md) | Session record with key findings summary |
 
