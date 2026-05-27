@@ -309,7 +309,7 @@ Run on at least two different platforms (e.g. Claude + Cursor) to confirm platfo
 
 ### 4a. Related Future Research: AI Tools & Memory Systems Analysis
 
-**Status:** Capture only — analysis deferred
+**Status:** Research complete — findings captured in [EXPLORATION_REPORT.md](./EXPLORATION_REPORT.md).
 
 **Goal:** Study advanced multi-agent architectures and modern AI agent memory systems as input for both:
 - Improving nullprobe's own internal protocols, wiki memory model, and update mechanisms.
