@@ -1,0 +1,137 @@
+# .goreleaser.yaml — Draft for nullprobe (pre-release evaluation)
+# 
+# This is a starting point, not a final production config.
+# Run with: goreleaser check && goreleaser release --snapshot (for testing)
+#
+# Key goals for nullprobe:
+# - Build standalone binaries via bun build --compile (or future Node SEA)
+# - Publish to GitHub Releases with good checksums
+# - Drive Homebrew tap and Scoop bucket updates
+# - Eventually support npm binary wrapper (Pro feature)
+#
+# See docs/RELEASE_ORCHESTRATION_EVALUATION.md for the full rationale.
+
+version: 2
+
+before:
+  hooks:
+    - npm ci
+    - npm run build   # produces dist/
+
+# We currently plan to use bun build --compile for true standalone binaries.
+# The "node" builder below is experimental (GoReleaser v2.16+).
+# For the first release we may keep a custom build step + archives.
+
+builds:
+  # Example using the new Node builder (requires Node 25.5+ and SEA setup)
+  # Comment this out until we are ready to migrate from bun compile.
+  - builder: node
+    id: nullprobe
+    main: dist/index.js
+    binary: nullprobe
+    targets:
+      - linux_x64
+      - linux_arm64
+      - darwin_x64
+      - darwin_arm64
+      - windows_x64
+    hooks:
+      before:
+        - npm run build
+
+# For now (preparation phase) we also support manual bun-compiled binaries
+# via the "binaries" section or custom hooks. The config below is illustrative.
+
+archives:
+  - id: default
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end }}
+      {{- if .Mips }}_{{ .Mips }}{{ end }}
+      {{- if .Darwin }}.dmg{{ else }}.tar.gz{{ end }}
+    format_overrides:
+      - goos: windows
+        format: zip
+    files:
+      - LICENSE
+      - README.md
+
+checksum:
+  name_template: "checksums.txt"
+  algorithm: sha256
+
+# GitHub Releases (source of truth for binaries + install script)
+release:
+  github:
+    owner: dmitrii-esin
+    name: nullprobe
+  draft: false
+  replace_existing_draft: true
+  mode: replace
+  header: |
+    ## nullprobe {{ .Tag }}
+
+    See the [install instructions](https://github.com/dmitrii-esin/nullprobe#install) in the README.
+
+# Homebrew (modern casks)
+# Requires a separate tap repo: dmitrii-esin/homebrew-nullprobe
+homebrew_casks:
+  - name: nullprobe
+    homepage: "https://github.com/dmitrii-esin/nullprobe"
+    description: "Deep-void probe that deploys living procedural memory and skills before every mission."
+    license: MIT
+    url_template: "https://github.com/dmitrii-esin/nullprobe/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+    # binaries:
+    #   - nullprobe
+    # repository:
+    #   owner: dmitrii-esin
+    #   name: homebrew-nullprobe
+    #   branch: main
+
+# Scoop (Windows)
+scoops:
+  - name: nullprobe
+    homepage: "https://github.com/dmitrii-esin/nullprobe"
+    description: "Deep-void probe that deploys living procedural memory and skills before every mission."
+    license: MIT
+    url_template: "https://github.com/dmitrii-esin/nullprobe/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+    # bucket:
+    #   owner: dmitrii-esin
+    #   name: scoop-nullprobe
+
+# npm binary wrapper (GoReleaser Pro feature)
+# Uncomment when we have Pro or decide on a manual thin wrapper instead.
+# npms:
+#   - name: nullprobe
+#     ids:
+#       - nullprobe
+#     description: "Deep-void probe..."
+#     homepage: "https://github.com/dmitrii-esin/nullprobe"
+#     license: MIT
+#     access: public
+
+# Optional: Docker (FROM scratch + musl binary)
+# dockers:
+#   - image_templates:
+#       - "ghcr.io/dmitrii-esin/nullprobe:{{ .Tag }}"
+#       - "ghcr.io/dmitrii-esin/nullprobe:latest"
+
+# Changelog (uses conventional commits by default)
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^ci:"
+
+# Snapshot for local testing: goreleaser release --snapshot --clean
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+
+# This config is intentionally minimal during the preparation phase.
+# We will evolve it together with the first real release.
