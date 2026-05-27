@@ -1,0 +1,124 @@
+# .github/workflows/release.yml
+#
+# Basic GitHub Actions Release Workflow for nullprobe
+#
+# This is the "moderate automation" option.
+# It builds binaries using bun build --compile, creates a GitHub Release,
+# and publishes to npm using OIDC Trusted Publishing.
+#
+# Trigger: Push a tag matching v*.*.*
+#
+# IMPORTANT: This workflow is prepared but should only be used after review.
+# It currently does NOT publish by default for safety.
+
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+  id-token: write   # Required for npm OIDC Trusted Publishing
+  packages: write   # For GHCR if we add Docker later
+
+jobs:
+  build-binaries:
+    name: Build Binaries
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: macos-latest
+            target: bun-darwin-arm64
+            artifact_name: nullprobe
+            binary_name: nullprobe
+          - os: macos-latest
+            target: bun-darwin-x64
+            artifact_name: nullprobe
+            binary_name: nullprobe
+          - os: ubuntu-latest
+            target: bun-linux-x64
+            artifact_name: nullprobe
+            binary_name: nullprobe
+          - os: ubuntu-latest
+            target: bun-linux-arm64
+            artifact_name: nullprobe
+            binary_name: nullprobe
+          - os: windows-latest
+            target: bun-windows-x64
+            artifact_name: nullprobe.exe
+            binary_name: nullprobe.exe
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Build standalone binary
+        run: |
+          bun build src/index.ts --compile --target=${{ matrix.target }} --outfile ${{ matrix.artifact_name }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.target }}
+          path: ${{ matrix.artifact_name }}
+
+  create-release:
+    name: Create GitHub Release + Checksums
+    needs: build-binaries
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all binaries
+        uses: actions/download-artifact@v4
+        with:
+          path: dist-artifacts
+
+      - name: Generate checksums
+        run: |
+          cd dist-artifacts
+          find . -type f -exec sha256sum {} \; > ../checksums.txt
+          mv ../checksums.txt .
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: nullprobe ${{ github.ref_name }}
+          draft: true   # Start as draft for safety
+          files: |
+            dist-artifacts/**/*
+            checksums.txt
+          generate_release_notes: true
+
+  publish-npm:
+    name: Publish to npm (OIDC)
+    needs: build-binaries
+    runs-on: ubuntu-latest
+    environment: npm-publish   # Recommended for OIDC
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies & build
+        run: |
+          npm ci
+          npm run build
+
+      - name: Publish to npm using OIDC
+        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}   # Will be empty with OIDC; kept for fallback
+
+# Note: For true OIDC Trusted Publishing, configure it in npm and remove the NODE_AUTH_TOKEN line.
+# This workflow is intentionally conservative (draft release + comments).

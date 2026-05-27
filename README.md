@@ -18,11 +18,14 @@ That's it. Under 30 seconds. Your project gets a compounding knowledge layer tha
 ### Recommended (once published)
 
 ```bash
-# One-line installer (bash/zsh, macOS + Linux)
+# macOS / Linux
 curl -fsSL https://raw.githubusercontent.com/dmitrii-esin/nullprobe/main/install.sh | sh
 
-# Or via Homebrew / Scoop (coming soon)
+# Windows (PowerShell)
+iwr -useb https://raw.githubusercontent.com/dmitrii-esin/nullprobe/main/install.ps1 | iex
 ```
+
+Other options: Homebrew, Scoop, Winget, Docker, and direct downloads.
 
 ### Current (from source)
 
