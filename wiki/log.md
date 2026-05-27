@@ -12,12 +12,7 @@
   - Updated AI_FRAMEWORK.md Part IX + notes in AGENTS.md/Claude.md about the bundle pattern.
   - All findings from the consolidated table (F-01 to F-07) addressed.
   - Full session (implementation, audits, protocol execution runs, remediation, final docs) now properly recorded in wiki/log.md and docs/CONTEXT.md Recent changes.
-  - Updated main README.md with clear **Prerequisites** and step-by-step **How to use** instructions for the optional shipped QA protocols feature (addressing long-standing discoverability gap).
-  - Enhanced `src/scaffolder/templates/protocol-readme.ts` (the source for user projects):
-    - Added 4 realistic, best-practice-aligned starter example rows (VER-110, AUD-110, SEC-110, CLN-110).
-    - Added guidance on "Leveraging Optional MCPs" (e.g. chrome-devtools for visual checks).
-    - Added clear note explaining the deliberate internal (v3, self-improving) vs generalized (v1.2) asymmetry for Exploration.
-    - Added minimal `## Changelog` section.
+  - Git: All changes committed and pushed to master (commit 35afa38). Session closed.
   - Added minimal `## Changelog` sections to the three deepened generalized templates (`protocol-security.ts`, `protocol-exploration.ts`, `protocol-cleanup.ts`).
   - Updated `AI_FRAMEWORK.md` Part IX with better guidance on MCP usage and internal vs shipped distinction.
   - Added clarifying notes in `AGENTS.md` and `CLAUDE.md` about the `PROTOCOL_BUNDLE` registry pattern for grouped optional artifacts (per remediation plan).
