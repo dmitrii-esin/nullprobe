@@ -338,6 +338,61 @@ This research is particularly relevant because nullprobe's core offering is *dep
 
 ### 4b. (Reserved for future related items)
 
+---
+
+## 5. Architecture Analysis Review — Strategic Direction Decision
+
+**Status:** Review pending — materials saved, decision needed.
+
+**Context:** A deep architectural analysis compared nullprobe against 13 reference repositories (Antigravity session, 2026-05-27). The analysis identified 9 gaps (1 critical, 2 high, 3 medium, 2 low, 1 nit) and proposed 3 strategic paths forward.
+
+**Saved Materials:**
+
+| Document | Location | Contents |
+|----------|----------|----------|
+| Full analysis report | [docs/ARCHITECTURE_ANALYSIS.md](./ARCHITECTURE_ANALYSIS.md) | 9 gap findings, competitive matrix, 5 core questions answered, strategic paths |
+| Technical sidecar | [wiki/exploration/2026-05-27-architecture-analysis.md](../wiki/exploration/2026-05-27-architecture-analysis.md) | Raw reference data: agent rosters, MCP protocols, benchmarks, tool surfaces |
+| Wiki index | [wiki/index.md](../wiki/index.md) | Updated with all new repos + architecture analysis section |
+| Wiki log | [wiki/log.md](../wiki/log.md) | Session record with key findings summary |
+
+**Critical Gaps to Resolve:**
+
+| ID | Severity | Gap | Quick Fix? |
+|----|----------|-----|-----------|
+| GAP-01 | Critical | AI_FRAMEWORK.md describes 4-tier memory system that isn't implemented | Yes — simplify docs OR scaffold MyBrain MCP |
+| GAP-02 | High | Wrong skills standard (intellectronica/skillz → agentskills.io) | Yes — template text update |
+| GAP-03 | High | No runtime intelligence after scaffolding | No — strategic decision needed |
+| GAP-04 | Medium | Update command has no dedup/relevance scoring | Medium effort |
+| GAP-05 | Medium | Protocol meta-work outweighs actual feature development | Process change |
+| GAP-06 | Medium | No skill discovery / community integration | Medium effort |
+
+**Strategic Decision Required:**
+
+| Path | Description | Risk | ROI |
+|------|-------------|------|-----|
+| **1. Stay lightweight scaffolder** | Simplify AI_FRAMEWORK.md to match reality, add `nullprobe add <skill>`, call it done | Low | Medium |
+| **2. Memory-aware scaffolder** | Keep scaffolding + integrate MyBrain/Mem0 MCP as optional component (like context7) | Medium | **High** |
+| **3. Runtime system** | Add MCP server, hooks, quality gates → atelier-pipeline-lite | High (scope creep) | High |
+
+**Open Questions:**
+
+1. Have you evaluated atelier-pipeline hands-on?
+2. Are you aware of the [agentskills.io](http://agentskills.io) standard?
+3. Intended audience: individual devs bootstrapping, or teams establishing shared practices?
+4. Protocol meta-work: product feature (shipped to users) or development practice (for building nullprobe)?
+5. Which strategic path resonates?
+
+**Action Items:**
+
+- [ ] Review [docs/ARCHITECTURE_ANALYSIS.md](./ARCHITECTURE_ANALYSIS.md) — full report with competitive analysis
+- [ ] Review [wiki/exploration/2026-05-27-architecture-analysis.md](../wiki/exploration/2026-05-27-architecture-analysis.md) — technical details on each reference repo
+- [ ] Decide strategic direction (Path 1/2/3)
+- [ ] Fix GAP-02 (wrong skills standard) — low effort, no strategic dependency
+- [ ] Address GAP-01 (documentation-implementation mismatch) — depends on strategic path chosen
+- [ ] Consider adding MyBrain or Mem0 to `EXTRA_MCP_CHOICES` (highest-ROI quick win for Path 2)
+
+---
+
 ## 3. Language-Agnostic Distribution
 
 **Status:** Research complete — implementation not started
@@ -385,3 +440,55 @@ This requires adding Bun as a build dependency (dev-only). No runtime changes to
 - nullprobe's dependencies (`@octokit/rest`, `@inquirer/prompts`, `chalk`, `commander`, `ora`) have no native addons — `bun build --compile` will work without modifications.
 - The musl Linux target (`bun-linux-x64-musl`) is required for Alpine-based containers and some CI runners.
 - The `install.sh` script is the single highest-leverage deliverable: one command, zero runtime dependencies, works on any POSIX shell.
+
+---
+
+## 5. Architecture & Positioning Review (2026-05-27 Analysis)
+
+**Status:** Analysis complete and persisted. Review + decision pending.
+
+**Goal:** Review the major external architecture comparison performed on 2026-05-27 and decide on positioning, roadmap, and any lightweight follow-ups while preserving the "lightweight above all" charter.
+
+**Background:**
+- Wide comparison of nullprobe against 13 repositories (strongest signal from rohitg00/agentmemory + iii-hq/iii, OpenClaw, Anthropic skills + Hallmark, mem0, and the other sources already tracked in `src/github/sources.ts`).
+- Performed with three specialized sub-agents (Memory Systems, Skills/Runtime, Synthesizer).
+- Core tension identified: nullprobe's philosophy is a faithful transcription of the cited memory models, but the delivered mechanism is static/manual while the actual implementations provide automatic hooks, hybrid search, graphs, and runtime extensibility.
+
+**Key Deliverables (review these first):**
+- Primary synthesis: `docs/ARCHITECTURE_ANALYSIS_2026-05-27.md` (executive summary, consolidated gaps table, answers to the 5 core questions, 7 most important questions for the owner with impact notes, pros/cons table, prioritized recommendations).
+- Detailed sub-agent reports (in session `/tmp/nullprobe-analysis/`):
+  - `subagent-memory-architect-report.md`
+  - `subagent-skills-runtime-expert-report.md`
+- Local clones for inspection: `/tmp/nullprobe-analysis/{iii,agentmemory}/`
+- Also logged in `wiki/log.md` and `wiki/index.md`.
+
+**Specific Items to Decide:**
+- Positioning change (zero-code headline update): clearly frame nullprobe as the durable institutional bootstrap + protocol layer, with explicit complementarity to agentmemory/iii for automatic capture.
+- Whether to introduce a `SKILL_BUNDLE` registry (mirroring the successful `PROTOCOL_BUNDLE` pattern).
+- Whether to ship one thin high-signal "agentmemory adapter" skill.
+- How much wiki model evolution guidance to add (4-tier fidelity, optional graph support, etc.).
+- Prioritization of the 7 "Most Important Questions" listed in the analysis document.
+- Any content lifts for the generalized protocols based on the earlier expert audits + this new external view.
+
+**Non-Goals:**
+- Do not turn nullprobe into a full memory runtime or agent host.
+- Do not violate the two-questions lightweight promise.
+
+**Suggested First Action After Review:**
+Add chosen direction(s) as concrete, small, surgical items under this section or as new sub-bullets. Update `docs/CONTEXT.md` Recent changes when decisions are made.
+
+---
+
+## 6. Addressing Architectural Gaps (Exploration 2026-05-27)
+
+**Status:** Research & solutions proposed — implementation not started.
+
+**Goal:** Address the three critical architectural gaps identified during the comparison of nullprobe against 13 external GenAI projects (openclaw, mem0, agentmemory, etc.). The solutions maintain nullprobe's "Lightweight above all" philosophy while scaling capabilities.
+
+**Reference Material:**
+- Review the detailed gap analysis and proposed solutions in [docs/architecture-gaps-exploration.md](./architecture-gaps-exploration.md).
+
+**Action Items:**
+- [ ] **Gap 1: Wiki Fatigue (Memory Consolidation):** Implement a rolling-window memory mechanism into the `session-crystallize` skill. Instead of vector DBs, the skill will periodically summarize stale entries from `wiki/log.md` into `wiki/index.md` and truncate the log.
+- [ ] **Gap 2: Passive Skill Discoverability:** Update `AI_FRAMEWORK.md` to mandate the LLM to actively read the `.claude/skills/` or `.cursor/rules/` directory at the start of every session, rather than relying passively on IDE injection.
+- [ ] **Gap 3: Semantic Tooling Backup:** Create a new scaffolded skill (e.g., `search-codebase`) that acts as a wrapper around native CLI tools like `ripgrep` (`rg`) to give the LLM semantic-like search powers without a heavy database.

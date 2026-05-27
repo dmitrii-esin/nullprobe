@@ -45,6 +45,17 @@ Current backlog highlights:
 
 ## Recent changes
 
+### 2026-05-27 — Architecture & Positioning Deep Analysis (agent memory, skills, hosts)
+- Completed wide-ranging architectural review of nullprobe vs 13 high-signal external repositories (primary focus: rohitg00/agentmemory + iii-hq/iii as the runtime realization of the exact memory model cited in our sources, OpenClaw, Anthropic skills standard + Hallmark quality gates, mem0, and related repos).
+- Used three specialized sub-agents with deep expertise (Memory Systems Architect, Skills & Runtime Expert, Synthesizer Architect) for rigorous domain analysis.
+- Major findings persisted:
+  - Consolidated synthesis report: `docs/ARCHITECTURE_ANALYSIS_2026-05-27.md` (executive summary, key gaps table, direct answers to the 5 core questions, 7 most important questions the owner should ask next with impact notes, pros/cons of closest alternatives, prioritized lightweight recommendations).
+  - Two detailed sub-agent deep-dive reports + local clones of the two most relevant repos available in `/tmp/nullprobe-analysis/`.
+- Core insight: nullprobe's philosophy is accurate and high-fidelity, but the "living, self-updating procedural memory" delivery is manual/static while the cited sources' actual implementations deliver automatic hooks, hybrid search, graphs, 53 MCP tools, viewers, and runtime extensibility.
+- Strong recommendation: explicit positioning as the best-in-class *durable institutional layer + operational protocols + multi-env bootstrapper*, with clean complementarity to agentmemory/iii (or mem0) for the automatic half.
+- All analysis respected the "no changes during thinking" rule. Persistence of results (this entry + new docs file + wiki/log + wiki/index + PLAN review item) performed at owner request after delivery.
+- New review task added to `docs/PLAN.md` §5 with clear next actions and links to all artifacts.
+
 ### 2026-05-27 — Initial exploration synthesis on mandated sources (Antigravity / parallel session)
 - Prepared the short-form synthesis report `docs/EXPLORATION_REPORT.md` covering the five key resources (13-agent M&A due diligence system, Mem0, Vectorize agent memory comparison, AIDD + SudoLang, Hallmark anti-slop design skill).
 - Delivered a clean comparison table with Key Insights & Innovations and initial Nullprobe Integration Proposals for each.

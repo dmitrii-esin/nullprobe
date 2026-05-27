@@ -5,6 +5,31 @@
 
 ---
 
+## [2026-05-27] explore | Deep Architectural Analysis — nullprobe vs. 13 Reference Repositories (Antigravity session)
+
+**Method:** Ultrathink deep reasoning with research across 13 mandated repositories.
+**Time:** ~60 minutes of research + synthesis.
+
+### Outputs
+- Formal report: [docs/ARCHITECTURE_ANALYSIS.md](../docs/ARCHITECTURE_ANALYSIS.md) — 9 gap findings, competitive matrix, 3 strategic paths
+- Technical sidecar: [wiki/exploration/2026-05-27-architecture-analysis.md](exploration/2026-05-27-architecture-analysis.md) — raw reference data (agent rosters, MCP protocols, benchmarks)
+- Wiki index updated with all new repos + architecture analysis section
+- Plan item added: PLAN.md §5 — review architecture analysis + decide strategic direction
+
+### Key Findings (Summary)
+- **GAP-01 (Critical):** AI_FRAMEWORK.md describes a 4-tier memory system none of which is implemented. Wiki/log.md is flat markdown.
+- **GAP-02 (High):** nullprobe references `intellectronica/skillz` as canonical SKILL.md format; the official standard is now at `anthropics/skills` + agentskills.io.
+- **GAP-03 (High):** No runtime intelligence — tool exits after scaffolding. No MCP server, hooks, or quality gates.
+- **atelier-pipeline** identified as closest competitor — does scaffolding + runtime orchestration + persistent brain + 12 enforced quality gates.
+- **Mem0** (YC S24, 26k stars): Benchmarked memory system (LoCoMo 91.6) that could replace nullprobe's flat wiki pattern.
+- **MyBrain**: 8-tool MCP protocol that could be scaffolded as optional memory layer — highest-ROI integration opportunity.
+- Three strategic paths proposed: (1) stay lightweight scaffolder, (2) memory-aware scaffolder (integrate MyBrain/Mem0 MCP), (3) evolve into runtime system.
+
+### Repositories Analyzed
+anthropics/skills, mem0ai/mem0, robertsfeir/mybrain, robertsfeir/atelier-pipeline, openclaw/openclaw, iii-hq/iii, Nutlope/hallmark, ComposioHQ/awesome-claude-skills, josephsenior/Agentic-Design-Patterns, intellectronica/skillz, rohitg00/agentmemory, multica-ai/andrej-karpathy-skills, upstash/context7
+
+---
+
 ## [2026-05-27] explore | Initial synthesis on mandated AI agent memory & multi-agent sources (Antigravity session)
 - Prepared and committed the initial short synthesis report: `docs/EXPLORATION_REPORT.md`
 - Covered the five key sources (13-agent DD system, Mem0, Vectorize memory comparison, AIDD framework, Hallmark design skill).
@@ -97,6 +122,18 @@
   - PLAN §2.10 + CONTEXT backlog closed + recent changes.
   - Build green, 98/98 tests pass, manual scaffold verified on Claude + Cursor with seeded cases.
   - Strictly followed lightweight principle, think-before-coding, and simplicity-guard. Zero scope creep.
+
+## [2026-05-27] research | Architecture & Positioning Deep Analysis (agent memory, skills, hosts)
+  - Performed wide architectural comparison of nullprobe against 13 high-signal external repositories (focus on rohitg00/agentmemory + iii-hq/iii, OpenClaw, Anthropic skills + Hallmark, mem0, josephsenior patterns, etc.).
+  - Used three specialized sub-agents (Memory Systems Architect, Skills & Runtime Expert, Synthesizer Architect) for deep domain dives.
+  - Key outputs persisted:
+    - Primary synthesis: `docs/ARCHITECTURE_ANALYSIS_2026-05-27.md` (executive summary, consolidated gaps table, answers to the 5 core questions, 7 most important questions for the owner, pros/cons of alternatives, recommendations).
+    - Detailed sub-agent reports: `/tmp/nullprobe-analysis/subagent-memory-architect-report.md` and `subagent-skills-runtime-expert-report.md`.
+    - Local clones for inspection: `/tmp/nullprobe-analysis/{iii,agentmemory}/`.
+  - Major finding: nullprobe's philosophy is a faithful transcription of the cited sources, but the "living memory" delivery is static/manual while the actual implementations (especially agentmemory on iii) provide automatic hooks, hybrid search, graphs, and runtime extensibility.
+  - Strong recommendation: explicit positioning as the durable institutional bootstrap + protocol layer, with clean complementarity to agentmemory/iii for the automatic half.
+  - All work respected the original "analysis only, no repo changes during thinking" constraint. Persistence of results done at owner request.
+  - Full 13-repo references and artifact locations documented in the new docs file.
 
 ## [2026-05-24] init | Project bootstrapped
 
