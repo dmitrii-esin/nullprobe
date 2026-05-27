@@ -45,6 +45,12 @@ Current backlog highlights:
 
 ## Recent changes
 
+### 2026-05-27 — Initial exploration synthesis on mandated sources (Antigravity / parallel session)
+- Prepared the short-form synthesis report `docs/EXPLORATION_REPORT.md` covering the five key resources (13-agent M&A due diligence system, Mem0, Vectorize agent memory comparison, AIDD + SudoLang, Hallmark anti-slop design skill).
+- Delivered a clean comparison table with Key Insights & Innovations and initial Nullprobe Integration Proposals for each.
+- Committed as part of parallel Antigravity CLI session work.
+- This formed the first body of research on these topics.
+
 ### 2026-05-27 — Deep Exploration protocol execution on 5 mandated high-signal sources
 - Executed full `protocols/exploration.md` v3 (including Step 0.5 Targeted Nullprobe Self-Improvement Inquiry, broad domain sweeps using all available tools, strict exclusion + substance filters, and the exact 5-field + Integration Proposal finding template) focused on the five sources previously identified in PLAN.md §4a.
 - Produced rich structured findings with concrete neurosymbolic quality gates, institutional memory patterns (Hindsight-style reflect + multi-strategy), slop-test anti-generic gates (Hallmark), SudoLang + large skill library patterns (AIDD), and 2026 Agent Skills standard alignment.
