@@ -5,6 +5,35 @@
 
 ---
 
+## [2026-05-27 11:30] explore v3 | Deep Research on 5 Mandated Sources (DD-Agents, Hindsight, AIDD, Hallmark, Mem0)
+
+**Previous run:** 2026-05-27 (various QA protocol remediation + Exploration v3 design/implementation sessions)  
+**Time window:** Publications and repo activity primarily 2026-02 → 2026-05 (with emphasis on last 90 days where possible)  
+**Focus:** Targeted deep execution of the full Exploration protocol v3 (Step 0.5 self-improvement inquiry, exclusion triage, broad sweeps, exact 5-field + Integration Proposal template) on the five high-signal sources previously listed in PLAN.md §4a.
+
+### Key Findings (Summary)
+- **F1 Hallmark** (Nutlope): 65+ blocking slop-test gates + self-critique + "study" verb. Very high novelty (Apr 2026, rapid adoption). Strong for simplicity-guard + output quality in shipped protocols.
+- **F2 DD-Agents** (zoharbabin): Neurosymbolic 13-agent pipeline with deterministic symbolic cross-domain triggers + 5 hard blocking quality gates (citation verification, accusatory framing, NOT_FOUND escape, dedup, numerical audit) + persistent compound KB with graph + fingerprint lineage. Highest ROI for nullprobe.
+- **F3 Hindsight** (Vectorize): Institutional knowledge vs personalization split. Fact extraction at write + multi-strategy retrieval + `reflect` synthesis. MCP-first. Model for wiki / Cognitive Firewall evolution.
+- **F4 AIDD + SudoLang**: Large specialized skill library + constraint-based typed pseudocode (20-30% token savings). Useful contrast and selective patterns.
+- **Agent Skills standard** (agentskills.io, 2026): Progressive disclosure via SKILL.md + YAML frontmatter. Validates and strengthens nullprobe's multi-env skill approach.
+
+**Top 3 by ROI ÷ Effort (lightweight test):** F2 (DD-Agents gates + lineage), F1 (Hallmark slop gates), F3 + Agent Skills standard.
+
+**Incorporation Highlights (see full report for details):**
+- Blocking quality gate patterns (citation, accusatory, slop, symbolic triggers) → generalized verification/audit protocol tables.
+- Institutional memory model + reflect synthesis → wiki evolution and Exploration v3 Step 8.
+- Alignment with 2026 Agent Skills standard.
+
+### Outputs
+- Detailed user-facing report with tables and proposals: [docs/exploration-2026-05-27-mandated-sources.md](../docs/exploration-2026-05-27-mandated-sources.md)
+- Technical sidecar: [wiki/exploration/2026-05-27.md](exploration/2026-05-27.md)
+- Full query trace, raw artifacts, and session work: `/tmp/nullprobe-explore-2026-05-27/`
+
+**Run Summary:** 6-7 novel high-signal items after rigorous exclusion + substance filtering. ~50 minutes. All mandated sources received deep multi-source analysis (articles + repos + recency + cross-references). No security/breaking findings.
+
+---
+
 ## [2026-05-27] documentation + remediation | QA Protocols — Final user-facing improvements + comprehensive logging
   - Updated main README.md with clear Prerequisites and step-by-step usage for the shipped QA protocols feature.
   - Enhanced `protocol-readme.ts` (user-facing) with realistic starter examples, MCP guidance, Exploration internal-vs-generalized note, and Changelog stub.
