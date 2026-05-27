@@ -32,111 +32,53 @@ The original prompt that produced this protocol is preserved at [`prompts/audit-
 
 ---
 
-## Steps
+## Audit Process Steps
 
-### 1. Orient
+Use this table to execute the audit repeatably.
 
-**What:** Build a quick mental model of the project before delegating.
-**How:**
-  - Read `docs/CONTEXT.md`, `CLAUDE.md`, `AGENTS.md`, `GEMINI.md`, `README.md`
-  - List `src/`, `protocols/`, top-level config
-  - Skim `package.json` scripts and dependencies
-**Success:** You can name every top-level concern in one sentence each.
+| # | Step | Key Actions | Success Criteria |
+|---|------|-------------|------------------|
+| 1 | Orient | Read `docs/CONTEXT.md`, `CLAUDE.md`, `AGENTS.md`, `GEMINI.md`, `README.md`<br>List `src/`, `protocols/`, top-level files<br>Skim `package.json` scripts & dependencies | You can name every major top-level concern in one sentence |
+| 2 | Pick Subagent Lenses | Use the default 6-lens registry below as the stable core<br>Only add extra personas when a clear gap is identified (document why) | At least the 6 default lenses are assigned (or explicit justification for any omission) |
+| 3 | Brief & Launch Subagents | Send one message with all briefs in parallel<br>Each brief must contain: Persona, Goal, Scope, Method, "No code changes" rule, required output format, honesty mandate | All subagents are dispatched concurrently and produce findings in the mandated table format |
+| 4 | Aggregate Findings | Assign unique `AUD-###` IDs<br>Dedupe across lenses<br>Take the higher severity on conflicts<br>Drop pure noise (no evidence, no behavior impact) | One clean findings table exists<br>Every row has real `file:line` or command evidence<br>No duplicate IDs |
+| 5 | Produce Remediation Options | Group findings into: Quick wins (S), Deeper fixes (M/L), Deferrable, Won't-fix (with rationale)<br>For each option note scope, risk, dependencies, and resolved AUD-IDs | Clear, prioritized remediation options exist with effort/risk estimates |
+| 6 | Output the Report | Produce the structured report (see template below) | Report is complete and usable without further clarification |
 
----
+**Default Lens Registry (stable core — improvise only when justified)**
 
-### 2. Pick Subagent Lenses
+| Lens | Persona | Primary Focus |
+|------|---------|---------------|
+| L1 | Frontend (Cursor + modern web stack) | Does the tool deliver value or get in the way for this common stack? |
+| L2 | Backend (Python/Go + DB + CI) | Same question for backend-heavy projects |
+| L3 | ML/Data (notebooks, pipelines) | Same question for data/ML workflows |
+| L4 | Code Auditor | Type safety, dead code, error handling, duplication, edge cases |
+| L5 | Requirements vs Reality | Do the claims in docs match actual behavior? |
+| L6 | Adversarial / Robustness | Prompt injection, supply-chain, secrets, file/network risks, resilience |
 
-**What:** Choose the review perspectives. The default registry below covers most cases; **improvise additional personas** for any concern that doesn't fit.
+**Hard Rule:** All findings must include evidence (`file:line` or runnable command). "Vibes" are not findings.
 
-**Default lens registry:**
+## Risk Focus
 
-| Lens | Persona | What they look for |
-|------|---------|--------------------|
-| L1 — Frontend Persona | Developer scaffolding a **Cursor + Next.js + shadcn + chrome-devtools MCP** frontend app | Does nullprobe deliver useful skills/MCPs for this stack? What's missing? Does it actively get in the way? |
-| L2 — Backend Persona | Developer scaffolding a **Python/Go backend** with DB + CI/CD via Claude Code | Same lens, backend stack |
-| L3 — ML/Data Persona | Data scientist scaffolding **Jupyter / data pipeline / ML training** project | Same lens, ML stack |
-| L4 — Code Auditor | Senior TS engineer reading `src/` cold | Type holes, dead code, redundancy, error handling, edge cases, async correctness |
-| L5 — Requirements vs Reality | QA lead with the docs in one hand and the code in the other | Every claim in README/CONTEXT/PLAN/CLAUDE — does the code actually do it? |
-| L6 — Adversarial / Security / Robustness | Red-team reviewer | Prompt injection in fetched skills, supply chain, secrets, bad inputs, network failure modes, file overwrite races |
+This protocol is designed to surface risks in the following areas (via the default lens set):
 
-**Success:** Subagent list locked. Each persona has a clearly defined lens different from the others.
+- Requirement drift / over-promising
+- Architectural or code quality issues
+- Usability and value delivery for different tech stacks
+- Security, robustness, and supply-chain problems
 
----
+It is intentionally broad rather than narrowly scoped to one risk category.
 
-### 3. Brief and Launch Subagents in Parallel
+### Execution Log (use during the audit)
 
-**What:** Send all subagents in a single message so they run concurrently.
-**How:** Each subagent brief must include:
-  - **Persona / lens** (one sentence)
-  - **Goal** (what to find, from this lens specifically)
-  - **Scope** (what files / commands to inspect; what's out of scope)
-  - **Method** (concrete inspection or read-only execution steps)
-  - **No-code-changes rule** (analysis only; do not Edit/Write)
-  - **Output format** — every finding as: `Issue ID | Severity (1=critical, 2=high, 3=medium, 4=low, 5=nit) | Category | Location (file:line) | Finding | Evidence | Recommendation`
-  - **Honesty mandate** — call out missing features, drift, and "lipstick on a pig" without softening
-
-**Success:** All subagents dispatched in parallel; the parent task is now waiting on results.
-
----
-
-### 4. Aggregate Findings
-
-**What:** Merge subagent reports into one normalized table.
-**How:**
-  - Assign unique `Issue ID`s (e.g., `AUD-001`, `AUD-002`, …)
-  - De-duplicate findings that multiple lenses surfaced; note which lenses agreed (higher confidence)
-  - Reconcile severity disagreements — pick the higher one and note the rationale
-  - Drop noise: nitpicks that don't change behavior, taste preferences without evidence
-
-**Success:** Single table. Every row has a real `file:line` or command-evidence. No duplicates.
-
----
-
-### 5. Produce Remediation Options
-
-**What:** Translate findings into actionable options.
-**How:** Group as:
-  - **Quick wins** — small surgical fixes, no architectural risk
-  - **Deeper fixes** — multi-file or design-level changes
-  - **Deferrable** — real but not blocking
-  - **Won't-fix candidates** — explain why
-
-For each option include: scope estimate (S/M/L), risk, dependencies between fixes, and which Issue IDs it resolves.
-
-**Success:** User can pick a batch and start work without re-reading the findings.
-
----
-
-### 6. Output the Report
-
-**What:** Present results to the requester.
-**How:**
-
-```
-## Audit Report — YYYY-MM-DD
-
-### Findings
-| ID | Severity | Category | Location | Finding | Evidence | Recommendation |
-| -- | -------- | -------- | -------- | ------- | -------- | -------------- |
-| AUD-001 | … | … | … | … | … | … |
-
-### Remediation Options
-- **Quick wins (S):** AUD-002, AUD-007 — …
-- **Deeper fixes (M/L):** AUD-001, AUD-005 — …
-- **Deferrable:** AUD-009 — …
-- **Won't-fix candidates:** AUD-011 — …
-
-### Notes from each lens
-- L1 (Frontend persona): top 1–2 takeaways
-- L2 (Backend persona): …
-- L3 (ML/Data persona): …
-- L4 (Code auditor): …
-- L5 (Reqs vs reality): …
-- L6 (Adversarial): …
-```
-
-**Success:** Report is complete. The user can act on it without follow-up clarifying questions.
+| # | Step | Status | Notes / Observations | Time Spent |
+|---|------|--------|----------------------|------------|
+| 1 | Orient | | | |
+| 2 | Pick Subagent Lenses | | | |
+| 3 | Brief & Launch Subagents | | | |
+| 4 | Aggregate Findings | | | |
+| 5 | Produce Remediation Options | | | |
+| 6 | Output the Report | | | |
 
 ---
 
@@ -161,11 +103,12 @@ npm run protocol:audit
 
 ## Success Criteria (overall)
 
-- [ ] At least 4 distinct subagent lenses ran in parallel
-- [ ] Every finding has a unique ID, severity, and evidence
-- [ ] Remediation options grouped by effort
-- [ ] No code was modified during the audit
-- [ ] The prompt that triggered the protocol is preserved in `prompts/`
+- [ ] At least 5 of the 6 default lenses produced findings (or explicit justification why fewer were used)
+- [ ] Every finding has a unique ID, severity, `file:line` or command evidence, and a clear recommendation
+- [ ] At least one Critical or High severity finding (or explicit statement that none were found after thorough review)
+- [ ] Remediation options are grouped and prioritized with effort/risk estimates
+- [ ] No code was modified during the audit phase
+- [ ] The canonical prompt that triggered this run is referenced or preserved
 
 ---
 

@@ -391,6 +391,23 @@ After any session that reveals a new pattern, corrects an assumption, or invalid
 
 The schema is co-evolved between human and LLM over time. The first version will be rough. After a few dozen sessions it will reflect how your domain actually works. That schema is also transferable to other projects and other AI environments.
 
+### Part IX: Operational QA Protocols (Optional)
+
+When a project was initialized with the optional QA protocols feature (`nullprobe init` + "yes" to the protocols question), you will find a `protocols/` directory containing five generalized runbooks:
+
+- `README.md` — how to use and extend them
+- `verification.md` — regression / determinism checks (3-column tables)
+- `audit.md` — multi-lens risk and quality review
+- `security.md` — secrets, dependencies, injection, supply chain hygiene
+- `exploration.md` — disciplined discovery of new tools and patterns
+- `cleanup.md` — safe, reproducible workspace hygiene
+
+**These belong entirely to the project.** They are deliberately lighter and more generic than nullprobe's own internal contributor protocols (which are significantly richer, especially the Exploration protocol v3 used for self-improvement of this project itself). Seed them with your actual domain rules, critical invariants, and risk areas. Run them regularly. File useful execution results back into `wiki/log.md`.
+
+The value is in the living, customized tables — not the starter content.
+
+**Tip**: If you opted into extra MCPs during init (e.g. `chrome-devtools`), your AI can use them inside verification and audit steps for visual and browser-based checks.
+
 ### Quick Reference: Decision Trees
 
 **“Should I capture this thought?”**

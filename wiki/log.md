@@ -5,6 +5,69 @@
 
 ---
 
+## [2026-05-27] documentation + remediation | QA Protocols — Final user-facing improvements + comprehensive logging
+  - Updated main README.md with clear Prerequisites and step-by-step usage for the shipped QA protocols feature.
+  - Enhanced `protocol-readme.ts` (user-facing) with realistic starter examples, MCP guidance, Exploration internal-vs-generalized note, and Changelog stub.
+  - Added Changelog sections to deepened generalized templates.
+  - Updated AI_FRAMEWORK.md Part IX + notes in AGENTS.md/Claude.md about the bundle pattern.
+  - All findings from the consolidated table (F-01 to F-07) addressed.
+  - Full session (implementation, audits, protocol execution runs, remediation, final docs) now properly recorded in wiki/log.md and docs/CONTEXT.md Recent changes.
+  - Updated main README.md with clear **Prerequisites** and step-by-step **How to use** instructions for the optional shipped QA protocols feature (addressing long-standing discoverability gap).
+  - Enhanced `src/scaffolder/templates/protocol-readme.ts` (the source for user projects):
+    - Added 4 realistic, best-practice-aligned starter example rows (VER-110, AUD-110, SEC-110, CLN-110).
+    - Added guidance on "Leveraging Optional MCPs" (e.g. chrome-devtools for visual checks).
+    - Added clear note explaining the deliberate internal (v3, self-improving) vs generalized (v1.2) asymmetry for Exploration.
+    - Added minimal `## Changelog` section.
+  - Added minimal `## Changelog` sections to the three deepened generalized templates (`protocol-security.ts`, `protocol-exploration.ts`, `protocol-cleanup.ts`).
+  - Updated `AI_FRAMEWORK.md` Part IX with better guidance on MCP usage and internal vs shipped distinction.
+  - Added clarifying notes in `AGENTS.md` and `CLAUDE.md` about the `PROTOCOL_BUNDLE` registry pattern for grouped optional artifacts (per remediation plan).
+  - All documentation and content changes were surgical, followed best practices from the original handoff, and addressed the full list of findings from the consolidated audit table (F-01 through F-07).
+  - Comprehensive logging of the entire session's work (protocol implementation, full remediation, multi-lens audits, internal protocol execution runs, and final improvements) completed across wiki/log.md and docs/CONTEXT.md.
+
+## [2026-05-27] remediation | QA Protocols — Full remediation (Phases 1-4)
+  - Safety + UX: Strong overwrite warning + user-specific folder recommendation implemented.
+  - Philosophy: Prompt now correctly gated behind "specific" approach.
+  - Structural: Clean registry-based design (`protocol-bundle.ts`), no more duplication, static protocols converted to const exports.
+  - Content: Security, Exploration, and Cleanup protocols substantially deepened with tables and useful starters.
+  - Verification: Build clean, 100 tests passing, manual end-to-end check successful.
+  - Full internal protocol execution run (Verification, Audit, Security, Cleanup):
+    - Cleanup: Passed.
+    - Security: Passed (clean scans and audits).
+    - Verification: Passed (build + 100 tests + multi-platform manual checks + protocols feature + overwrite logic all exercised successfully).
+    - Audit: Multi-lens review completed (Frontend + Backend + Code Auditor). No critical issues in the delivered feature.
+    Consolidated human-readable table of all findings/gaps from the full protocol run delivered in session.
+
+  - Remediation of internal Verification & Audit protocols — full pass:
+    - Critical: Steps converted to scannable tables (VER-001, AUD-001).
+    - High/Medium: Added Execution Logs for live recording, Risk Focus sections, stricter measurable success criteria.
+    - Low: Added Postconditions/teardown guidance, minor polish.
+    All changes surgical and lightweight. The two protocols are now meaningfully stronger examples of the best practices the project advocates.
+  - Exploration protocol evolved to v3 (internal) + v1.2 (generalized) as self-improving engine...
+
+## [2026-05-27] remediation | QA Protocols — Phase 1+2 (safety, gating, test coverage)
+  - Fixed inaccurate prompt text.
+  - Added prominent overwrite warning for protocols/ + recommendation for separate user-specific folder (protocols/custom/ etc.).
+  - Gated the QA protocols question behind "specific" approach (protects lightweight default path).
+  - Added unit test for includeProtocols + seeding.
+  - Build + 98 tests green.
+  - Full remediation plan (structural + content depth for remaining 3 protocols) documented in docs/REMEDIATION_QA_PROTOCOLS.md.
+  - Preparation complete for deeper work on Exploration protocol as self-improvement mechanism.
+
+## [2026-05-26] implement | Full generalized QA Protocols (all 5) for contributors + users
+  - Created generalized versions of security, exploration, and cleanup protocols (in addition to the previous verification + audit).
+  - All five now ship as an optional bundle when users answer "yes" during `nullprobe init`.
+  - Updated PLAN.md §4 (status + actions), main docs (README/CLAUDE/AGENTS/GEMINI), AI_FRAMEWORK Part IX, and verification scenario.
+  - Build + tests green. Manual scaffold verification passed with full set.
+
+## [2026-05-26] implement | Generalized QA Protocols (verification + audit) per approved design
+  - Optional opt-in `protocols/` shipped to user projects (3 files: README + 3-col verification with seeded priorities + structured audit table).
+  - One confirm + one free-text input in init-flow (default off, modeled on extra MCPs).
+  - New template builders + wiring in scaffolder (ALWAYS_WRITTEN for overwrite guard).
+  - AI_FRAMEWORK.md Part IX added so AIs know to use the protocols.
+  - PLAN §2.10 + CONTEXT backlog closed + recent changes.
+  - Build green, 98/98 tests pass, manual scaffold verified on Claude + Cursor with seeded cases.
+  - Strictly followed lightweight principle, think-before-coding, and simplicity-guard. Zero scope creep.
+
 ## [2026-05-24] init | Project bootstrapped
 
   Decision: Start nullprobe v0.1 as a lightweight AI Knowledge OS injector CLI.

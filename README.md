@@ -101,7 +101,30 @@ See `AGENTS.md` for multi-environment contribution setup.
 
 ## Protocols
 
-Operational runbooks live in [`/protocols/`](protocols/README.md). Any AI in this workspace can locate and follow them without extra instructions.
+### For Contributors (this repository)
+
+Operational runbooks for developing nullprobe live in [`/protocols/`](protocols/README.md).
+
+### For Users (shipped into your projects)
+
+When you run `nullprobe init`, you can optionally receive a set of generalized, customizable QA protocols in your project.
+
+**Prerequisites**
+- Node.js ≥ 18
+- You are using `nullprobe` via global install, npx, or local development
+
+**How to get the protocols**
+
+1. Run `nullprobe init your-project`
+2. When asked **"How do you want to set up your AI toolkit?"**, choose **"I want to add something specific"**
+3. Answer **"yes"** to "Include customizable QA protocols for this project?"
+4. (Optional) Enter 1–3 things that must never regress in your project — these seed `verification.md`
+
+**Strong recommendation**
+
+The files in `protocols/` are high-quality **starters**. Create a separate folder (e.g. `protocols/custom/` or `my-protocols/`) for your heavily customized, long-term rules. This protects your work if you ever re-run `nullprobe init`.
+
+See the generated `protocols/README.md` in your project for detailed usage and extension patterns.
 
 | Protocol | Purpose | npm script |
 |----------|---------|------------|

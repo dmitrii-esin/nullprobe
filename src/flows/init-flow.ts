@@ -87,13 +87,29 @@ export async function runInitFlow(targetPath: string): Promise<InitAnswers> {
   // and search both default to context7-only (extraMcps: []).
   const extraMcps: ExtraMcpId[] = approach === 'specific' ? await pickExtraMcps() : [];
 
+  // Optional QA protocols are only offered in "specific" mode to protect the
+  // core "two questions and done" lightweight experience on the recommended path.
+  const { includeProtocols, protocolPriorities } = approach === 'specific'
+    ? await pickQaProtocols()
+    : { includeProtocols: false, protocolPriorities: undefined };
+
   const platformConfig = PLATFORMS[platform];
   const existingFiles = await checkExistingFiles(finalPath, platformConfig.detectPaths);
   if (existingFiles.length > 0) {
     console.log(chalk.yellow(`\n  These files already exist in ${finalPath}:`));
     existingFiles.forEach((f) => console.log(chalk.yellow(`    • ${f}`)));
+
+    const hasProtocols = existingFiles.some(f => f.startsWith('protocols/'));
+
+    if (hasProtocols) {
+      console.log(chalk.red(`\n  WARNING: You have existing files in protocols/.`));
+      console.log(chalk.red(`  These may contain your customized, project-specific runbooks.`));
+      console.log(chalk.dim(`  Consider moving your heavily customized content to a separate folder`));
+      console.log(chalk.dim(`  (e.g. protocols/custom/ or my-protocols/) before proceeding.`));
+    }
+
     const overwrite = await confirm({
-      message: 'Overwrite them?',
+      message: hasProtocols ? 'Overwrite them anyway?' : 'Overwrite them?',
       default: false,
     });
     if (!overwrite) {
@@ -102,7 +118,7 @@ export async function runInitFlow(targetPath: string): Promise<InitAnswers> {
     }
   }
 
-  return { platform, targetPath: finalPath, approach, details, extraMcps };
+  return { platform, targetPath: finalPath, approach, details, extraMcps, includeProtocols, protocolPriorities };
 }
 
 async function pickExtraMcps(): Promise<ExtraMcpId[]> {
@@ -119,6 +135,31 @@ async function pickExtraMcps(): Promise<ExtraMcpId[]> {
       value: c.id,
     })),
   });
+}
+
+async function pickQaProtocols(): Promise<{ includeProtocols: boolean; protocolPriorities?: string[] }> {
+  const include = await confirm({
+    message: 'Include customizable QA protocols for this project? (full set of 5 — optional, off by default)',
+    default: false,
+  });
+  if (!include) return { includeProtocols: false };
+
+  const raw = await input({
+    message: 'What 1-3 things must never regress? (comma-separated, e.g. login flow, checkout, data export)',
+    default: '',
+  });
+
+  const priorities = raw
+    .split(/[,;\n]+/)
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .slice(0, 3);
+
+  if (priorities.length > 0) {
+    console.log(chalk.dim(`\n  Will seed ${priorities.length} starter cases in protocols/verification.md.\n`));
+  }
+
+  return { includeProtocols: true, protocolPriorities: priorities.length ? priorities : undefined };
 }
 
 async function checkExistingFiles(base: string, toCheck: string[]): Promise<string[]> {

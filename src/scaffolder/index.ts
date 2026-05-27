@@ -11,6 +11,7 @@ import { wikiLog } from './templates/wiki-log.js';
 import { buildMcpConfig } from './templates/mcp-context7.js';
 import { geminiMd } from './templates/gemini-md.js';
 import { PLATFORMS } from './platforms.js';
+import { PROTOCOL_BUNDLE } from './protocol-bundle.js';
 
 export async function scaffold(answers: InitAnswers): Promise<string[]> {
   const base = path.resolve(answers.targetPath);
@@ -22,6 +23,14 @@ export async function scaffold(answers: InitAnswers): Promise<string[]> {
     ['wiki/index.md', WIKI_INDEX],
     ['wiki/log.md', wikiLog(today, answers.approach, answers.details)],
   ];
+
+  // Optional QA protocols bundle (off by default).
+  // Single source of truth lives in protocol-bundle.ts.
+  if (answers.includeProtocols) {
+    for (const entry of PROTOCOL_BUNDLE) {
+      files.push([entry.relPath, entry.getContent(answers)]);
+    }
+  }
 
   const platform = PLATFORMS[answers.platform];
 

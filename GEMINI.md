@@ -54,6 +54,10 @@ Config: `.gemini/settings.json`
 3. **Surgical Changes** — every changed line traces to the request
 4. **Goal-Driven Execution** — define verifiable success criteria, loop until verified
 
+## Protocols
+
+The internal operational runbooks live in `/protocols/`. When users run `nullprobe init` on their own projects and opt into QA protocols, they receive generalized versions of verification, audit, security, exploration, and cleanup.
+
 ## Core Principle
 
 Lightweight above all. Every feature must pass: "Does this make the tool simpler to use, or more complex?"

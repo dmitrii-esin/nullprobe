@@ -227,7 +227,113 @@ Expected:
 
 Repeat with `cursor`, `gemini-cli`, `antigravity` to confirm parity at `.cursor/mcp.json`, `.gemini/settings.json`, `.agent/mcp_config.json`.
 
+### 2.10 Optional QA protocols (full set of 5)
+
+```bash
+rm -rf /tmp/test-protocols && npm run dev -- init /tmp/test-protocols
+# Select any platform → recommended (or specific)
+# At "Include customizable QA protocols...?" answer: Y
+# Enter: login flow, checkout (for verification seeding)
+```
+
+Expected:
+- [ ] All five files exist: `protocols/README.md` + `verification.md`, `audit.md`, `security.md`, `exploration.md`, `cleanup.md`
+- [ ] `verification.md` contains seeded VER-100+ rows from the provided priorities
+- [ ] All files follow the generalized (lighter, more extensible) style with clear "Add your own..." sections
+- [ ] Re-run triggers overwrite guard for all protocol paths (via ALWAYS_WRITTEN)
+- [ ] AI_FRAMEWORK.md (in the target) contains Part IX describing the full set of five protocols
+
+Run on at least two different platforms (e.g. Claude + Cursor) to confirm platform-agnostic behavior.
+
 ---
+
+## 4. Generalizable / User-Facing QA Protocols
+
+**Status:** v1 complete (verification + audit). Remaining three protocols (security, exploration, cleanup) implemented in follow-up.
+
+**Goal:** Evolve the internal `/protocols/` runbooks into **general-purpose, less-specific, customizable QA protocols** that can be optionally shipped to end users via `nullprobe init`.
+
+**Vision:** After a user runs `nullprobe init`, their project can receive a full set of living operational protocols (verification, audit, security, exploration, cleanup) with clear extension points so teams can add their own domain-specific checks.
+
+**v1 Scope (Completed):**
+- Generalized `verification.md` (3-column table style + optional priority seeding)
+- Generalized `audit.md` (multi-lens structured findings table)
+- `protocols/README.md` with usage + extension guidance
+- Single optional "Include customizable QA protocols?" confirm during init (default off)
+- Wiring + AI_FRAMEWORK Part IX integration
+- Verification scenario 2.10
+
+**v2 Scope (Completed in this session):**
+- Generalized `security.md`
+- Generalized `exploration.md`
+- Generalized `cleanup.md`
+- Full set of 5 protocols now ships together when user opts in
+- Documentation updates across PLAN, README, CLAUDE.md, AGENTS.md, etc.
+
+**Why this matters**
+- Most projects lack good, living verification and audit practices.
+- The current protocols (especially the multi-lens audit + deterministic verification tables) are genuinely high quality.
+- Shipping generalized versions (with easy customization) would make nullprobe dramatically more useful for long-term project health, not just initial AI setup.
+
+**Core Challenges**
+- Current protocols are deeply nullprobe-specific: hardcoded paths (`src/`, `/tmp/test-*`), commands (`npm run dev -- init`), references to our PLAN.md §2 matrix, our own file-writer tests, etc.
+- Need clean separation: nullprobe's own protocols (stay in this repo under `/protocols/`) vs. generalized templates (what gets scaffolded into user projects).
+- Customization without bloat: How do we let users inject their own test cases / project specifics without violating the "two questions and done" + lightweight philosophy?
+- Delivery format: Should generalized protocols live as a top-level `protocols/` folder in the target project? As a new skill? Inside `wiki/protocols/`? Generated as `QA_PROTOCOLS.md`? Or something else?
+- Maintenance & evolution: Should `nullprobe update` be able to pull improved versions of the generalized protocol templates over time?
+
+**Possible Delivery & Extension Models (to evaluate)**
+- Optional step during `init`: "Include customizable QA protocols for this project?" (default: No, to protect simplicity).
+- If enabled: light questionnaire or free-text input for 1–3 key verification scenarios or risk areas specific to the user's project.
+- Scaffold a clean `protocols/` directory containing generalized, templated versions of the five protocols + a strong `README.md` explaining how to customize and add new cases (VER- / AUD- style).
+- Provide "starter packs" seeded from the user's answers (e.g., "web frontend project", "CLI tool", "data/ML pipeline", "library").
+- Clear patterns for extension: documented "Add your own test cases here" sections with examples.
+- Optional: a tiny generator that turns user-provided bullet points into properly formatted test case table entries.
+
+**Non-Goals (for v1)**
+- Do not force protocols on every user.
+- Do not make the init flow significantly longer.
+- Do not try to auto-generate sophisticated test cases — keep the user in control of domain specifics.
+
+**Next Actions**
+- [x] Research + design (completed in original session)
+- [x] Create generalized templates for verification + audit (v1)
+- [x] Wire optional path + update AI_FRAMEWORK.md + add verification scenario
+- [x] Expand to full set: security, exploration, cleanup generalized versions
+- [x] Update all main documentation (README, CLAUDE, AGENTS, PLAN, etc.)
+- [ ] Decide + implement whether generalized protocols should be refreshable via `nullprobe update` command (deferred)
+
+**Research Notes**
+- See the detailed best-practice research and examples (SeleniumBase markdown case plans, ISTQB-aligned templates, pen-test finding formats, ISO 29119-3) captured in the conversation leading to this item.
+- Strong inspiration possible from how the current audit table and verification steps already work well when made deterministic and table-driven.
+
+### 4a. Related Future Research: AI Tools & Memory Systems Analysis
+
+**Status:** Capture only — analysis deferred
+
+**Goal:** Study advanced multi-agent architectures and modern AI agent memory systems as input for both:
+- Improving nullprobe's own internal protocols, wiki memory model, and update mechanisms.
+- Informing the design of generalized, user-shippable protocols (especially how verification/audit protocols could themselves incorporate better memory, cross-finding synthesis, quality gates, and institutional learning patterns).
+
+**Key resources to analyze:**
+
+- https://dev.to/zoharbabin/building-a-13-agent-ai-system-for-ma-due-diligence-architecture-deep-dive-20ah  
+  (13-agent neurosymbolic M&A due diligence system: async pipeline, specialist + meta agents, deterministic cross-domain trigger rules, 5 blocking quality gates, citation verification, entity resolution, persistent knowledge base that compounds across runs, "make every run smarter than the last". Many direct parallels to nullprobe's audit + verification philosophy.)
+
+- https://github.com/mem0ai/mem0  
+  (Leading open-source agent memory framework — vector + graph, fact extraction, user/session/agent scoped memory. Widely adopted.)
+
+- https://vectorize.io/articles/best-ai-agent-memory-systems  
+  (Excellent 2026 comparison of 8 major agent memory frameworks: Mem0, Hindsight, Letta (ex-MemGPT), Zep/Graphiti, Cognee, etc. Strong distinctions between personalization vs institutional knowledge, multi-strategy retrieval, synthesis/reflect steps, temporal graphs, tiered/OS-inspired memory, and real production trade-offs.)
+
+- https://github.com/paralleldrive/aidd  
+  (AIDD Framework — comprehensive "AI Driven Development" system with CLI, large library of reusable agent skills, SudoLang structured prompting language, opinionated workflows (/discover → /task → /execute → /review), heavy emphasis on TDD, quality gates, and preventing AI-generated technical debt. Very relevant as a peer project in the "structured AI collaboration" space.)
+
+This research is particularly relevant because nullprobe's core offering is *deploying living procedural memory + skills + protocols*. Understanding how the best current memory systems handle extraction, retrieval, synthesis, quality, and compounding knowledge will improve both the product and the protocols we ship.
+
+---
+
+### 4b. (Reserved for future related items)
 
 ## 3. Language-Agnostic Distribution
 

@@ -89,7 +89,11 @@ npm run dev -- init /tmp/test   # Test scaffold output
 
 ## Protocols
 
-Operational runbooks live in [`/protocols/`](protocols/README.md). Read and follow them for recurring tasks:
+Operational runbooks live in [`/protocols/`](protocols/README.md). Read and follow them for recurring tasks.
+
+**Note on grouped optional artifacts**: The QA protocols feature (shipped to user projects) uses a `PROTOCOL_BUNDLE` registry in `src/scaffolder/protocol-bundle.ts` as the single source of truth. Adding new protocols to this bundle follows the same spirit as the Critical wiring rule.
+
+When using `nullprobe init` on other projects, users can opt in to receiving a full set of generalized, customizable versions of these protocols.
 
 | Task | Runbook |
 |------|---------|

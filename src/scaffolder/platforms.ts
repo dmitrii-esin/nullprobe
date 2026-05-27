@@ -1,5 +1,6 @@
 import type { ExtraFile } from '../types.js';
 import { wrapAsMdc } from './skill-to-mdc.js';
+import { PROTOCOL_PATHS } from './protocol-bundle.js';
 
 export interface PlatformConfig {
   skillPath(skillName: string): string;
@@ -10,7 +11,15 @@ export interface PlatformConfig {
 // Plain-overwrite files that the scaffolder ALWAYS writes regardless of
 // platform — included in every platform's detectPaths so the overwrite prompt
 // fires when re-running init in a directory that already has them.
-const ALWAYS_WRITTEN = ['AI_FRAMEWORK.md', 'wiki/log.md', 'wiki/index.md'];
+// Core always-written files + the optional protocols bundle.
+// Protocol paths are derived from the single source of truth in protocol-bundle.ts
+// to avoid duplication.
+const ALWAYS_WRITTEN = [
+  'AI_FRAMEWORK.md',
+  'wiki/log.md',
+  'wiki/index.md',
+  ...PROTOCOL_PATHS,
+];
 
 export const PLATFORMS: Record<string, PlatformConfig> = {
   claude: {

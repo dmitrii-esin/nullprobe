@@ -40,3 +40,12 @@ Each runbook carries a `version:` field in its header. When making breaking chan
   <commands or actions>
 **Success:** What "done" looks like.
 ```
+
+## Prompts & Design Specifications
+
+Original prompts and task specifications that led to protocols are preserved under `protocols/prompts/`.
+
+- `audit-spec.md` — original prompt that produced the Audit protocol
+- `protocol-spec.md` — general protocol creation spec
+- `generalized-qa-protocols.md` — comprehensive handoff prompt for designing **user-facing / generalizable versions** of the protocols (see PLAN.md §4)
+- `generalized-qa-protocols-design-options.md` — short design options starter document (head start for the Design Proposal)

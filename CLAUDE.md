@@ -22,6 +22,8 @@ npm run build                # Compile to dist/
 
 Operational runbooks for recurring tasks live in [`/protocols/`](protocols/README.md). Read and follow them — no extra instructions needed.
 
+**Note**: The optional user-shipped QA protocols use a clean registry pattern (`protocol-bundle.ts`) for maintainability. See AGENTS.md for details on grouped optional artifacts.
+
 | Task | Runbook | npm script |
 |------|---------|------------|
 | Discover new tools | [`protocols/exploration.md`](protocols/exploration.md) | `npm run protocol:explore` |
@@ -29,6 +31,8 @@ Operational runbooks for recurring tasks live in [`/protocols/`](protocols/READM
 | Security check | [`protocols/security.md`](protocols/security.md) | `npm run protocol:security` |
 | Clean workspace | [`protocols/cleanup.md`](protocols/cleanup.md) | `npm run protocol:cleanup` |
 | QA audit (multi-perspective) | [`protocols/audit.md`](protocols/audit.md) | `npm run protocol:audit` |
+
+When scaffolding new projects with `nullprobe init`, users can optionally receive a generalized, customizable version of these five protocols in their own `protocols/` directory.
 
 ## Architecture
 

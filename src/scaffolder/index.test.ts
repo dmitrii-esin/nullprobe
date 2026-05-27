@@ -105,4 +105,30 @@ describe('scaffolder index', () => {
     expect(content).toContain('User intent (specific): pytest hooks + mypy strict');
     expect(content).toContain('Approach: specific');
   });
+
+  it('includes all 6 protocol files when includeProtocols is true (with seeding)', async () => {
+    vi.mocked(fileWriter.writeFile).mockClear();
+    vi.mocked(fileWriter.writeExtraFile).mockClear();
+
+    const written = await scaffold(answers('claude', {
+      includeProtocols: true,
+      protocolPriorities: ['login flow', 'checkout'],
+    }));
+
+    expect(written).toContain('protocols/README.md');
+    expect(written).toContain('protocols/verification.md');
+    expect(written).toContain('protocols/audit.md');
+    expect(written).toContain('protocols/security.md');
+    expect(written).toContain('protocols/exploration.md');
+    expect(written).toContain('protocols/cleanup.md');
+
+    // Verify seeding worked for verification
+    const verCall = vi.mocked(fileWriter.writeFile).mock.calls.find(
+      ([path]) => path.endsWith('protocols/verification.md')
+    );
+    expect(verCall).toBeDefined();
+    const verContent = verCall![1] as string;
+    expect(verContent).toContain('VER-100');
+    expect(verContent).toContain('login flow');
+  });
 });

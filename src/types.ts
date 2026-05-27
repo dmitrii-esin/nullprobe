@@ -10,6 +10,9 @@ export interface InitAnswers {
   approach: InitApproach;
   details: string;       // user-typed text when approach === 'specific'; empty otherwise
   extraMcps: ExtraMcpId[];
+  // Optional QA protocols (off by default, per lightweight principle)
+  includeProtocols?: boolean;
+  protocolPriorities?: string[];  // 0-3 items captured when user opts in
 }
 
 export interface SourceRepo {

@@ -14,145 +14,53 @@
 
 ---
 
-## Steps
+## Verification Steps
 
-### 1. Clean Build
+Use this table for execution. Mark status during the run.
 
-**What:** Ensure the compiled output is fresh and matches source.
-**How:**
-  ```bash
-  rm -rf dist/
-  npm run build
-  ```
-**Success:** `tsc` exits 0, `dist/index.js` exists and is executable (`chmod +x` applied by build script).
+| # | Step | Description / Key Actions | Expected Result |
+|---|------|---------------------------|-----------------|
+| 1 | Clean Build | `rm -rf dist/`<br>`npm run build` | `tsc` exits 0 and `dist/index.js` exists + is executable |
+| 2 | Run Automated Test Suite | `npm test` (with coverage) | All tests pass<br>Branch coverage ≥ 80% on `src/scaffolder/`, `src/flows/`, `src/search/`<br>No unexplained skipped tests |
+| 3 | Manual Test — clean `nullprobe init` | `rm -rf /tmp/test-probe && mkdir /tmp/test-probe`<br>`npm run dev -- init /tmp/test-probe` (Claude + recommended) | These 7 files exist and are non-empty:<br>• AI_FRAMEWORK.md<br>• wiki/index.md<br>• wiki/log.md<br>• 4 nullprobe skills under `.claude/skills/` |
+| 4 | Manual Test — overwrite guard | Re-run the same init command into `/tmp/test-probe` | The flow prompts before overwriting; nothing is silently replaced |
+| 5 | Manual Test — Cursor platform | `rm -rf /tmp/test-cursor && mkdir /tmp/test-cursor`<br>`npm run dev -- init /tmp/test-cursor` (Cursor + recommended) | At least one `.mdc` file exists in `.cursor/rules/` |
+| 6 | Manual Test — `nullprobe update` | `npm run dev -- update` (from project root, network available) | Command exits 0 (or only fails on genuine network error) **and** `wiki/log.md` contains a new timestamped entry (or a clear network-error message is surfaced) |
+| 7 | Cross-Check Against Requirements | For each "Working" item in `docs/CONTEXT.md`, confirm the corresponding verification step(s) actually cover it | All documented "Working" behaviors have passing evidence from steps above |
+| 8 | Generate Report | Fill the structured report template (see below) | Report is complete with clear PASS/FAIL per category and remediation notes for any failures |
 
----
+**On failure in any step:** Document the exact failure (command output, file:line, observed vs expected) before continuing. Do not silently accept failures.
 
-### 2. Run Automated Test Suite
+**Postconditions / Teardown:** Remove any temporary directories created during testing (e.g. `/tmp/test-probe`, `/tmp/test-cursor`) unless you intentionally want to keep them for further investigation.
 
-**What:** Execute all unit and integration tests with coverage.
-**How:**
-  ```bash
-  npm test
-  # Equivalent: vitest run --coverage
-  ```
-**Success criteria:**
-  - Exit code 0 (all tests pass)
-  - Coverage report generated in `coverage/`
-  - Branch coverage ≥ 80% on `src/scaffolder/`, `src/flows/`, `src/search/`
-  - No skipped tests without a comment explaining why
+### Execution Log (use during the run)
 
-**On failure:** Note failing test names, error messages, and file:line references. Do not proceed to Step 3 until fixed or explicitly accepted as a known failure.
+Copy this table and fill it in real time:
 
----
-
-### 3. Manual Test — `nullprobe init` (clean directory)
-
-**What:** Scaffold into a fresh temp directory and verify all expected files are created.
-**How:**
-  ```bash
-  rm -rf /tmp/test-probe && mkdir /tmp/test-probe
-  npm run dev -- init /tmp/test-probe
-  # Select: Claude, recommended setup
-  ```
-**Verify these files exist:**
-  ```bash
-  ls /tmp/test-probe/AI_FRAMEWORK.md
-  ls /tmp/test-probe/wiki/index.md
-  ls /tmp/test-probe/wiki/log.md
-  ls /tmp/test-probe/.claude/skills/nullprobe-intro/SKILL.md
-  ls /tmp/test-probe/.claude/skills/think-before-coding/SKILL.md
-  ls /tmp/test-probe/.claude/skills/simplicity-guard/SKILL.md
-  ls /tmp/test-probe/.claude/skills/session-crystallize/SKILL.md
-  ```
-**Success:** All 8 files exist, none are empty (size > 0).
+| # | Step | Status (PASS / FAIL / BLOCKED / SKIP) | Actual Result / Evidence | Notes / Remediation |
+|---|------|---------------------------------------|--------------------------|---------------------|
+| 1 | Clean Build | | | |
+| 2 | Run Automated Test Suite | | | |
+| 3 | Manual Test — clean init | | | |
+| 4 | Manual Test — overwrite guard | | | |
+| 5 | Manual Test — Cursor | | | |
+| 6 | Manual Test — update | | | |
+| 7 | Cross-Check Against Requirements | | | |
+| 8 | Generate Report | | | |
 
 ---
 
-### 4. Manual Test — `nullprobe init` (overwrite guard)
+## Risk Focus (Key Areas This Protocol Covers)
 
-**What:** Confirm the overwrite prompt fires when files already exist.
-**How:**
-  ```bash
-  # Re-run init into the same directory from Step 3
-  npm run dev -- init /tmp/test-probe
-  ```
-**Success:** The flow asks whether to overwrite existing files before proceeding. Files are not silently overwritten.
+This protocol primarily mitigates the following risks:
 
----
+- Incorrect or broken scaffolding behavior (especially multi-platform drift)
+- Regressions in core functionality after changes
+- Silent data loss or destructive behavior (e.g. overwrite scenarios)
+- Inaccurate claims in project documentation vs reality
+- Network-dependent features failing without clear feedback
 
-### 5. Manual Test — `nullprobe init` (Cursor platform)
-
-**What:** Verify Cursor-specific output (`.mdc` skills in `.cursor/rules/`).
-**How:**
-  ```bash
-  rm -rf /tmp/test-cursor && mkdir /tmp/test-cursor
-  npm run dev -- init /tmp/test-cursor
-  # Select: Cursor, recommended setup
-  ```
-**Verify:**
-  ```bash
-  ls /tmp/test-cursor/.cursor/rules/
-  # Expect: *.mdc skill files
-  ```
-**Success:** At least one `.mdc` file present in `.cursor/rules/`.
-
----
-
-### 6. Manual Test — `nullprobe update`
-
-**What:** Verify the update command runs without crashing and writes to wiki/log.md.
-**How:**
-  ```bash
-  # Run from the nullprobe repo root (needs network)
-  npm run dev -- update
-  ```
-**Success:** Command exits 0 (or non-zero only on genuine network error), `wiki/log.md` is updated with a new entry if search returns results.
-
----
-
-### 7. Cross-Check Against Requirements
-
-**What:** Verify that documented features match actual behavior.
-**How:** For each row in the status table in `docs/CONTEXT.md`, confirm:
-
-  | Feature | Expected | Actual | Pass/Fail |
-  |---------|----------|--------|-----------|
-  | `nullprobe init` scaffolds 4 skills + wiki | Step 3 verified | — | — |
-  | `nullprobe update` GitHub + Tavily search | Step 6 verified | — | — |
-  | Multi-env scaffold (Claude/Cursor/Antigravity) | Steps 3+5 verified | — | — |
-
-**Success:** Every "Working" row in CONTEXT.md is covered by a passing test case above.
-
----
-
-### 8. Generate Report
-
-**What:** Produce the structured verification report.
-**How:** Fill in:
-  ```
-  ## Verification Report — YYYY-MM-DD
-
-  **Build:** PASS / FAIL
-  **Automated tests:** PASS / FAIL  (N passed, N failed, coverage: X%)
-  **Manual — init (clean):** PASS / FAIL
-  **Manual — init (overwrite guard):** PASS / FAIL
-  **Manual — init (Cursor):** PASS / FAIL
-  **Manual — update:** PASS / FAIL
-  **Spec cross-check:** PASS / FAIL
-
-  ### Failures
-  - <test name>: <error> (<file>:<line>)
-
-  ### Gaps (requirements not covered by any test)
-  - <gap description>
-
-  ### Recommended fixes
-  - <fix>
-  ```
-**Success:** Report is complete. All PASS or failures are documented with remediation steps.
-
----
+**Not covered here:** Security, performance, or long-term maintainability audits (see sibling protocols).
 
 ## npm shortcut
 
@@ -167,10 +75,10 @@ npm run protocol:verify
 ## Success Criteria (overall)
 
 - [ ] Build exits 0
-- [ ] All automated tests pass, coverage ≥ 80% on core modules
-- [ ] All manual test cases executed and documented
-- [ ] Spec cross-check complete — no undocumented gaps
-- [ ] Report generated
+- [ ] All automated tests pass + branch coverage ≥ 80% on core modules (with no unexplained skips)
+- [ ] All manual test cases executed with results recorded in the Execution Log
+- [ ] Spec cross-check complete for all "Working" items in `docs/CONTEXT.md`
+- [ ] Structured report generated with clear PASS/FAIL per category and remediation notes for failures
 
 ---
 
