@@ -311,6 +311,10 @@ Run on at least two different platforms (e.g. Claude + Cursor) to confirm platfo
 
 **Status:** Research complete — findings captured in [EXPLORATION_REPORT.md](./EXPLORATION_REPORT.md).
 
+**2026-05-27 Deep Protocol Execution (Mandated Sources):** Additional targeted run of the full Exploration protocol v3 (including Step 0.5 self-improvement inquiry, broad sweeps, structured Step 4 findings with Nullprobe Integration Proposals, and query trace) performed specifically on the five sources listed below. Detailed structured report with tables, top recommendations, and concrete protocol/wiki enhancement proposals saved to:
+
+→ [exploration-2026-05-27-mandated-sources.md](./exploration-2026-05-27-mandated-sources.md)
+
 **Goal:** Study advanced multi-agent architectures and modern AI agent memory systems as input for both:
 - Improving nullprobe's own internal protocols, wiki memory model, and update mechanisms.
 - Informing the design of generalized, user-shippable protocols (especially how verification/audit protocols could themselves incorporate better memory, cross-finding synthesis, quality gates, and institutional learning patterns).
