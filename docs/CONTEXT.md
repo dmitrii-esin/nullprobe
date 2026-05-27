@@ -45,6 +45,16 @@ Current backlog highlights:
 
 ## Recent changes
 
+### 2026-05-27 — Deep Exploration protocol execution on 5 mandated high-signal sources
+- Executed full `protocols/exploration.md` v3 (including Step 0.5 Targeted Nullprobe Self-Improvement Inquiry, broad domain sweeps using all available tools, strict exclusion + substance filters, and the exact 5-field + Integration Proposal finding template) focused on the five sources previously identified in PLAN.md §4a.
+- Produced rich structured findings with concrete neurosymbolic quality gates, institutional memory patterns (Hindsight-style reflect + multi-strategy), slop-test anti-generic gates (Hallmark), SudoLang + large skill library patterns (AIDD), and 2026 Agent Skills standard alignment.
+- Key deliverables persisted:
+  - Detailed report with tables, top-3 ROI ranking, and surgical incorporation proposals: [docs/exploration-2026-05-27-mandated-sources.md](./exploration-2026-05-27-mandated-sources.md)
+  - Full protocol artifacts, query trace, and raw research in `/tmp/nullprobe-explore-2026-05-27/` (research-only phase respected the original "no repo changes" constraint).
+- Top actionable items identified for protocols, wiki model / Cognitive Firewall, Exploration v3 self-improvement loop, and shipped user-facing QA protocols (especially blocking citation/accusatory/slop gates).
+- Research performed without modifying the repository until explicit owner request to persist (this entry + PLAN.md reference + new report file).
+- Updated this Recent changes section + PLAN.md §4a per project rules.
+
 ### 2026-05-27 — QA Protocols final documentation & user-facing improvements
 - Updated main README.md with clear Prerequisites and step-by-step "How to use" instructions for the optional shipped QA protocols feature (addressing discoverability).
 - Enhanced shipped `protocol-readme.ts` with:
